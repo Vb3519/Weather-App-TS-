@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
+  list-style: none;
 }
 
 .app-page {
@@ -11,4 +12,71 @@
   overflow-y: scroll;
   background-color: #404040;
   color: whitesmoke;
+  display: flex;
+  justify-content: center;
+}
+
+.app-page__weather {
+  width: 50%;
+}
+
+/* Поле инпут: */
+.weather-app__input {
+  box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.35);
+  border-radius: 0.3rem;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.2rem;
+  background-color: whitesmoke;
+}
+
+.input-inner__label {
+  border: none;
+  background-color: whitesmoke;
+}
+
+.input-inner__input-elem {
+  width: 90%;
+  padding: 0.2rem;
+  outline: none;
+  font-size: 1.2rem;
+  border: none;
+  background-color: whitesmoke;
+}
+
+.fa-magnifying-glass {
+  padding: 0.2rem;
+  font-size: 1.3rem;
+  color: #404040;
+  opacity: 1;
+}
+
+.fa-magnifying-glass:hover {
+  cursor: pointer;
+}
+
+.weather-app__input:hover .fa-magnifying-glass {
+  color: #636363;
+}
+
+/* Анимация поиска информации по прогнозу погоды: */
+.fa-magnifying-glass.animation {
+  animation: glass-blink-animation 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}
+
+@keyframes glass-blink-animation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

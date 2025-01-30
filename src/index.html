@@ -3,9 +3,70 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <title>Weather App (TypeScript)</title>
   </head>
   <body>
-    <div class="app-page"></div>
+    <div class="app-page">
+      <section class="app-page__weather weather-app">
+        <!-- инпут для указания названия города: -->
+        <div class="weather-app__input input-inner">
+          <button class="input-inner__label">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <input
+            class="input-inner__input-elem"
+            type="text"
+            placeholder="Укажите название города..."
+          />
+        </div>
+
+        <!-- информация о погоде в выбранном городе: -->
+        <div class="weather-app__current current-weather">
+          <h3 class="current-weather__city">City Name Example</h3>
+          <p class="current-weather__date">29 января 2025г, Среда</p>
+          <p class="current-weather__temp">-24</p>
+          <ul class="current-weather__descrip">
+            <li class="current-weather__descrip__feels-like">
+              Ощущается как -27
+            </li>
+            <li class="current-weather__descrip__label"></li>
+            <li class="current-weather__descrip__text">Небольшой снег</li>
+          </ul>
+
+          <!-- скорость ветра, влажность видимость: -->
+          <ul class="current-weather__params">
+            <li class="current-weather__params__elem current-weather">
+              <div class="current-weather__label wind-label">
+                <i class="fa-solid fa-wind"></i>
+              </div>
+              <span class="current-weather__param-value wind-value">3</span>
+            </li>
+            <li class="current-weather__params__elem current-weather">
+              <div class="current-weather__label humidity-label">
+                <i class="fa-solid fa-droplet"></i>
+              </div>
+              <span class="current-weather__param-value humidity-value"
+                >60%</span
+              >
+            </li>
+            <li class="current-weather__params__elem current-weather">
+              <div class="current-weather__label visibility-label">
+                <i class="fa-solid fa-eye"></i>
+              </div>
+              <span class="current-weather__param-value visibility-value"
+                >10км</span
+              >
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
   </body>
 </html>
