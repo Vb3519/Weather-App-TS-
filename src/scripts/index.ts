@@ -26,14 +26,20 @@ const getWeatherInfoBtnLabel: Element | null = document.querySelector(
 const currentWeatherDataContainer: Element | null = document.querySelector(
   '.weather-app__current'
 );
+const weatherForecastContainer: Element | null = document.querySelector(
+  '.weather-forecast__info'
+);
 
-let currentWeatherData: currentWeatherApiResponse | null | undefined = null;
-let extractedWeatherData: extracted_CurrentWeatherData | null = null;
+let currentWeatherData: currentWeatherApiResponse | null | undefined = null; // текущая погода в запрашиваемом городе
+let extractedWeatherData: extracted_CurrentWeatherData | null = null; // объект из текущей даты по погоде (для рендера)
 
-let currentWeatherCoords: currentCoordsApiResponse | null = null;
+let currentWeatherCoords: currentCoordsApiResponse | null = null; // широта и долгота для API-запроса прогноза на 5 дней
 
-let weatherForecastData: weatherForecastApiResponse | null | undefined = null;
-let weatherForecastTempData: any = null;
+let weatherForecastData: weatherForecastApiResponse | null | undefined = null; // прогноз на 5 дней
+let weatherForecastTempData: number[][] | null = null; // массив массивов температур на 5 дней
+let weatherForecastAverageDayTemp: number[] | null = null; // массив усредненных значений температуры на каждый из 5 дней
+let weatherForecastDescripAndIcons: string[][] | null = null;
+let weatherForecastElemsList: HTMLLIElement[] | null = null;
 
 let currentCityName: string | null = null;
 
@@ -76,11 +82,24 @@ const getWeatherData = async (cityName: string | null) => {
     const lon: string = currentWeatherCoords.lon;
 
     weatherForecastData = await fetchForecastWeatherData(lat, lon, API_KEY);
+
     // массив с массивами температур на ближайшие 5 суток:
     weatherForecastTempData =
       createWeatherForecastTempDataArr(weatherForecastData);
   }
   console.log(weatherForecastTempData);
+
+  weatherForecastDescripAndIcons =
+    createWeatherForecastIconsAndDescripArr(weatherForecastData);
+  console.log(weatherForecastDescripAndIcons);
+
+  weatherForecastAverageDayTemp = calcForecastAverageDayTemp();
+  console.log(weatherForecastAverageDayTemp);
+
+  weatherForecastElemsList = createWeatherForecastElemsList(); // ----------------------------------------------------------------------------- TYT
+  console.log(weatherForecastElemsList);
+
+  renderWeatherForecast();
 
   if (getWeatherInfoBtn) getWeatherInfoBtn.disabled = false;
   currentCityName = null;
@@ -123,7 +142,7 @@ const renderCurrentWeatherData = (
   cityWeatherData: extracted_CurrentWeatherData | null
 ): void => {
   if (currentWeatherDataContainer) {
-    currentWeatherDataContainer.innerHTML = `    
+    currentWeatherDataContainer.innerHTML = `
       <h3 class="current-weather__city">${cityWeatherData?.cityName}</h3>
       <p class="current-weather__date">${currentDateAndTime}</p>
       <p class="current-weather__temp">${cityWeatherData?.temprature} °C</p>
@@ -151,12 +170,13 @@ const renderCurrentWeatherData = (
   }
 };
 
+// Массив с температурными параметрами на ближайшие 5 суток:
 function createWeatherForecastTempDataArr(
   weatherForecast: weatherForecastApiResponse | null | undefined
 ): number[][] {
-  const weatherForecastList: any = weatherForecast?.list;
+  const weatherForecastList: any[] = weatherForecast?.list;
 
-  // т.к. в API временной отрезок по 3ч, то берем 8 элементов массива (объектов со значениями температуры)
+  // т.к. в API временной отрезок по 3ч, берем 8 элементов массива (объектов со значениями температуры)
   // чтобы получить усредненные сутки:
   const forecastTempMainArr: number[][] = []; // string[]
   const forecastTempStep: number[] = [];
@@ -177,3 +197,105 @@ function createWeatherForecastTempDataArr(
 
   return forecastTempMainArr;
 }
+
+// Массив с описанием примерной погоды на ближайшие 5 дней и индексами иконок погоды:
+function createWeatherForecastIconsAndDescripArr(
+  weatherForecast: weatherForecastApiResponse | null | undefined
+) {
+  const weatherForecastList: any[] = weatherForecast?.list;
+  const forecastDescripAndIconDataMainArr: string[][] = [];
+
+  for (let i = 4; i < weatherForecastList.length; i += 8) {
+    const forecastDataStep: string[] = [];
+
+    // т.к. шаг в 8 объектов (для получения первого усредненного значения, берем 4)
+    let weatherDescriptionText: string =
+      weatherForecastList[i].weather[0].description;
+    let weatherIconId: string = weatherForecastList[i].weather[0].icon;
+
+    forecastDataStep.push(weatherDescriptionText);
+    forecastDataStep.push(weatherIconId);
+
+    forecastDescripAndIconDataMainArr.push([...forecastDataStep]);
+
+    forecastDataStep.length = 0;
+  }
+
+  return forecastDescripAndIconDataMainArr;
+}
+
+// создание элемента списка из прогноза погоды на ближайшие 5 дней (всего 5 элементов)
+const createWeatherForecastElem = (
+  averageTemp: number,
+  descripAndIcon: string[]
+): HTMLLIElement => {
+  const weatherForecastListElem: HTMLLIElement = document.createElement('li');
+  weatherForecastListElem.classList.add('forecast-info__elem');
+
+  weatherForecastListElem.innerHTML = `
+    <span class="forecast-info__elem__day">Пн</span>
+    <div class="forecast-info__elem__icon">
+      <img src="http://openweathermap.org/img/wn/${descripAndIcon[1]}.png" />
+    </div>
+    <span class="forecast-info__elem__temp">${averageTemp}°C</span>
+    <span class="forecast-info__elem__descrip">${descripAndIcon[0]}</span>
+  `;
+
+  return weatherForecastListElem;
+};
+
+// Расчет единого усредненного значения дневной температуры (для каждого из 5 дней):
+const calcForecastAverageDayTemp = (): number[] => {
+  const averageTempsArr: number[] = [];
+
+  if (weatherForecastTempData) {
+    weatherForecastTempData.forEach((dayTempData: number[]) => {
+      let averageDayTempValue: number | null = null;
+
+      averageDayTempValue = dayTempData.reduce(
+        (acc: number, el: number) => (acc += el),
+        0
+      );
+
+      averageTempsArr.push(Math.floor(averageDayTempValue / 8));
+    });
+  }
+
+  return averageTempsArr;
+};
+
+// Создание списка из 5-ти элементов <li></li> прогноза погоды (для рендера):
+const createWeatherForecastElemsList = (): HTMLLIElement[] => {
+  const weatherForecastElemsList: HTMLLIElement[] = [];
+
+  if (
+    weatherForecastAverageDayTemp !== null &&
+    weatherForecastDescripAndIcons !== null
+  ) {
+    for (let counter: number = 0; counter <= 5; counter++) {
+      const descripAndIcon: string[] = weatherForecastDescripAndIcons[counter];
+
+      if (descripAndIcon && descripAndIcon.length === 2) {
+        weatherForecastElemsList?.push(
+          createWeatherForecastElem(
+            weatherForecastAverageDayTemp[counter],
+            weatherForecastDescripAndIcons[counter]
+          )
+        );
+      } else {
+        console.log(
+          'Ошибка, недостаточно данных прогноза погоды для дня:' + counter
+        );
+      }
+    }
+  }
+
+  return weatherForecastElemsList;
+};
+
+// Рендер прогноза погоды на ближайшие 5 дней:
+const renderWeatherForecast = (): void => {
+  weatherForecastElemsList?.forEach((element: HTMLLIElement) => {
+    weatherForecastContainer?.append(element);
+  });
+};

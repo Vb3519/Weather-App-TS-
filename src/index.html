@@ -24,17 +24,18 @@
             class="input-inner__input-elem"
             type="text"
             placeholder="Укажите название города..."
+            maxlength="20"
           />
         </div>
 
-        <!-- информация о погоде в выбранном городе: -->
+        <!----------------------------------- информация о погоде в выбранном городе: ----------------------------------->
         <div class="weather-app__current current-weather">
           <h3 class="current-weather__city">City Name Example</h3>
           <p class="current-weather__date">29 января 2025г, Среда</p>
-          <p class="current-weather__temp">-24</p>
+          <p class="current-weather__temp">-24°C</p>
           <ul class="current-weather__descrip">
             <li class="current-weather__descrip__feels-like">
-              Ощущается как -27
+              Ощущается как -27°C
             </li>
             <li class="current-weather__descrip__label"></li>
             <li class="current-weather__descrip__text">Небольшой снег</li>
@@ -46,7 +47,7 @@
               <div class="current-weather__label wind-label">
                 <i class="fa-solid fa-wind"></i>
               </div>
-              <span class="current-weather__param-value wind-value">3</span>
+              <span class="current-weather__param-value wind-value">3 м/с</span>
             </li>
             <li class="current-weather__params__elem current-weather">
               <div class="current-weather__label humidity-label">
@@ -64,6 +65,59 @@
                 >10км</span
               >
             </li>
+          </ul>
+        </div>
+
+        <!----------------------------------- прогноз погоды на ближайшие 5 дней (в выбранном городе): ----------------------------------->
+        <div class="weather-app__forecast weather-forecast">
+          <h3 class="weather-forecast__title">Прогноз погоды на пять дней:</h3>
+          <ul class="weather-forecast__info forecast-info">
+            <!-- <li class="forecast-info__elem">
+              <span class="forecast-info__elem__day">Пн</span>
+              <div class="forecast-info__elem__icon">
+                <img src="http://openweathermap.org/img/wn/03n.png" />
+              </div>
+              <span class="forecast-info__elem__temp">8°C</span>
+              <span class="forecast-info__elem__descrip">Небольшой снег</span>
+            </li>
+
+            <li class="forecast-info__elem">
+              <span class="forecast-info__elem__day">Пн</span>
+              <div class="forecast-info__elem__icon">
+                <img src="http://openweathermap.org/img/wn/03n.png" />
+              </div>
+              <span class="forecast-info__elem__temp">8°C</span>
+              <span class="forecast-info__elem__descrip">Небольшой снег</span>
+            </li>
+
+            <li class="forecast-info__elem">
+              <span class="forecast-info__elem__day">Пн</span>
+              <div class="forecast-info__elem__icon">
+                <img src="http://openweathermap.org/img/wn/03n.png" />
+              </div>
+              <span class="forecast-info__elem__temp">8°C</span>
+              <span class="forecast-info__elem__descrip">Небольшой снег</span>
+            </li>
+
+            <li class="forecast-info__elem">
+              <span class="forecast-info__elem__day">Пн</span>
+              <div class="forecast-info__elem__icon">
+                <img src="http://openweathermap.org/img/wn/03n.png" />
+              </div>
+              <span class="forecast-info__elem__temp">8°C</span>
+              <span class="forecast-info__elem__descrip"
+                >Небольшая облачность</span
+              >
+            </li>
+
+            <li class="forecast-info__elem">
+              <span class="forecast-info__elem__day">Пн</span>
+              <div class="forecast-info__elem__icon">
+                <img src="http://openweathermap.org/img/wn/03n.png" />
+              </div>
+              <span class="forecast-info__elem__temp">8°C</span>
+              <span class="forecast-info__elem__descrip">Небольшой снег</span>
+            </li> -->
           </ul>
         </div>
       </section>
