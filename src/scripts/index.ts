@@ -11,7 +11,10 @@ import extracted_CurrentWeatherData from './types/extractedCurrentWeatherData';
 import currentCoordsApiResponse from './types/currentCoordsApiResponse';
 import weatherForecastApiResponse from './types/weatherForecastApiResponse';
 
-import { createCurrentDateString } from './utils/currentDateAndTime';
+import {
+  createCurrentDateString,
+  getShortDayNamesData,
+} from './utils/currentDateAndTime';
 
 // Рендер эл-ов:
 import renderCurrentWeatherData from './render/renderCurrWeatherData';
@@ -46,6 +49,7 @@ let weatherForecastData: weatherForecastApiResponse | null | undefined = null; /
 
 let currentDayForecastWeatherData: string[][] | null = null; // дневная дата, интервал 3 часа (время, температура, иконка погоды)
 
+let weatherForecastShortDayNames: string[] | null = null; // массив с сокращенными названиями дней (5 дней)
 let weatherForecastTempData: number[][] | null = null; // массив массивов температур на 5 дней
 let weatherForecastAverageDayTemp: number[] | null = null; // массив усредненных значений температуры на каждый из 5 дней
 let weatherForecastDescripAndIcons: string[][] | null = null; // массив описания погоды и индексов иконок погоды на каждый из 5 дней
@@ -90,6 +94,14 @@ const getWeatherData = async (cityName: string | null) => {
   console.log(extractedWeatherData);
   console.log(currentWeatherCoords);
 
+  // РЕНДЕР ТЕКУЩЕЙ ПОГОДЫ В ЗАПРАШИВАЕМОМ ГОРОДЕ:
+  //---------------------------------------------
+  renderCurrentWeatherData(
+    currentWeatherDataContainer,
+    extractedWeatherData,
+    currentDateAndTime
+  );
+
   // ПОЛУЧЕНИЕ ДАТЫ ПРОГНОЗА ПОГОДЫ (на 5 дней):
   if (currentWeatherCoords) {
     const lat: string = currentWeatherCoords.lat;
@@ -122,6 +134,9 @@ const getWeatherData = async (cityName: string | null) => {
 
   // РЕНДЕР И ДАННЫЕ ПРОГНОЗА ПОГОДЫ НА 5 ДНЕЙ:
   //----------------------------------------------------------------------------------------
+  weatherForecastShortDayNames = getShortDayNamesData();
+  console.log(weatherForecastShortDayNames);
+
   weatherForecastDescripAndIcons =
     createWeatherForecastIconsAndDescripArr(weatherForecastData);
   console.log(weatherForecastDescripAndIcons);
@@ -140,14 +155,6 @@ const getWeatherData = async (cityName: string | null) => {
   if (inputElem) inputElem.value = '';
 
   console.log(weatherForecastData);
-
-  // РЕНДЕР ТЕКУЩЕЙ ПОГОДЫ В ЗАПРАШИВАЕМОМ ГОРОДЕ:
-  //---------------------------------------------
-  renderCurrentWeatherData(
-    currentWeatherDataContainer,
-    extractedWeatherData,
-    currentDateAndTime
-  );
 };
 // ОБРАБОТЧИК:
 getWeatherInfoBtn?.addEventListener('click', () => {
@@ -250,9 +257,11 @@ const calcForecastAverageDayTemp = (): number[] => {
 
 // Создание списка из 5-ти элементов <li></li> прогноза погоды НА 5 ДНЕЙ (для рендера):
 const createWeatherForecastElemsList = (): HTMLLIElement[] => {
+  // ---------------------------------------------------------------------------------------------------------------------------------- TYT
   const weatherForecastElemsList: HTMLLIElement[] = [];
 
   if (
+    weatherForecastShortDayNames !== null &&
     weatherForecastAverageDayTemp !== null &&
     weatherForecastDescripAndIcons !== null
   ) {
@@ -262,6 +271,7 @@ const createWeatherForecastElemsList = (): HTMLLIElement[] => {
       if (descripAndIcon && descripAndIcon.length === 2) {
         weatherForecastElemsList?.push(
           createWeatherForecastElem(
+            weatherForecastShortDayNames[counter],
             weatherForecastAverageDayTemp[counter],
             weatherForecastDescripAndIcons[counter]
           )

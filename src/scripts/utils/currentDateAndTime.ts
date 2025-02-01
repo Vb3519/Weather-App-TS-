@@ -8,6 +8,8 @@ const daysList: { [key: number]: string } = {
   6: 'Суббота',
 };
 
+const shortDayNamesList = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+
 const monthsList: { [key: number]: string } = {
   0: 'января',
   1: 'февраля',
@@ -41,9 +43,29 @@ const currentDateAndTimeData: {
   currentDayIndex: number;
 } = currentDateAndTime();
 
+// Возможно имеет смысл экспортировать отсюда функции createCurrentDateString(), getShortDayNamesData(); указывая им параметры для работы
+// но тогда придется экспортировать и текущую дату, чтоб работать с вызовами этих функций
 export function createCurrentDateString(): string {
   const monthIndex: number = currentDateAndTimeData.currentMonthIndex;
   const dayIndex: number = currentDateAndTimeData.currentDayIndex;
 
   return `${currentDateAndTimeData.currentDate} ${monthsList[monthIndex]} ${currentDateAndTimeData.currentYear}, ${daysList[dayIndex]}`;
 }
+
+export const getShortDayNamesData = (): string[] => {
+  const shortDayNamesData: string[] = [];
+  let dayIndex: number = currentDateAndTimeData.currentDayIndex;
+  const dayNamesArrLength: number = shortDayNamesList.length;
+
+  for (let i = 0; i < dayNamesArrLength; i++) {
+    if (dayIndex < dayNamesArrLength - 1) {
+      shortDayNamesData.push(shortDayNamesList[dayIndex]);
+      ++dayIndex;
+    } else {
+      shortDayNamesData.push(shortDayNamesList[dayIndex]);
+      dayIndex = 0;
+    }
+  }
+
+  return shortDayNamesData.slice(0, 5);
+};

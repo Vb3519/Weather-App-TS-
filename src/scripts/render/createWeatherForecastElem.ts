@@ -1,6 +1,7 @@
 // создание элемента списка из прогноза погоды на ближайшие 5 дней (всего 5 элементов):
 
 const createWeatherForecastElem = (
+  shortDayName: string,
   averageTemp: number,
   descripAndIcon: string[]
 ): HTMLLIElement => {
@@ -8,7 +9,7 @@ const createWeatherForecastElem = (
   weatherForecastListElem.classList.add('forecast-info__elem');
 
   weatherForecastListElem.innerHTML = `
-      <span class="forecast-info__elem__day">Пн</span>
+      <span class="forecast-info__elem__day">${shortDayName}</span>
       <div class="forecast-info__elem__icon">
         <img src="http://openweathermap.org/img/wn/${descripAndIcon[1]}.png" />
       </div>

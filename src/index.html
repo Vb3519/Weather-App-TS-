@@ -15,18 +15,27 @@
   <body>
     <div class="app-page">
       <section class="app-page__weather weather-app">
-        <!-- инпут для указания названия города: -->
-        <div class="weather-app__input input-inner">
-          <button class="input-inner__label">
-            <i class="fa-solid fa-magnifying-glass"></i>
+        <header class="weather-app__search-and-input search-and-input">
+          <button
+            class="search-and-input__btn searh-history-btn"
+            title="История запросов"
+          >
+            <i class="fa fa-bars"></i>
           </button>
-          <input
-            class="input-inner__input-elem"
-            type="text"
-            placeholder="Укажите название города..."
-            maxlength="20"
-          />
-        </div>
+
+          <!-- инпут для указания названия города: -->
+          <div class="search-and-input__input input-inner">
+            <button class="input-inner__label">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <input
+              class="input-inner__input-elem"
+              type="text"
+              placeholder="Укажите название города..."
+              maxlength="20"
+            />
+          </div>
+        </header>
 
         <!----------------------------------- информация о погоде в выбранном городе: ----------------------------------->
         <div class="weather-app__current current-weather">
