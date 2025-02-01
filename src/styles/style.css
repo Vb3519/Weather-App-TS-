@@ -27,7 +27,7 @@
 
 /* Поле инпут: */
 .weather-app__input {
-  box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.35);
+  box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.25);
   border-radius: 0.3rem;
   margin-top: 0.5rem;
   display: flex;
@@ -122,6 +122,30 @@
   border-radius: 0.2rem;
 }
 
+/* Текущий день прогноз погоды: */
+.weather-app__current-day {
+  background-color: #404040;
+  border-radius: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.5rem;
+}
+
+.current-day-forecast__elem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-radius: 0.2rem;
+}
+
+.current-day-forecast__elem:hover {
+  cursor: pointer;
+  background-color: gray;
+}
+
 /* Прогноз погоды на ближайшие 5 дней: */
 .weather-app__forecast {
   padding: 0.5rem;
@@ -132,6 +156,11 @@
   gap: 0.5rem;
 }
 
+.weather-forecast__title {
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid gray;
+}
+
 .weather-forecast__info {
   display: flex;
   flex-direction: column;
@@ -139,7 +168,14 @@
 }
 
 .forecast-info__elem {
+  padding: 0 0.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
+  border-radius: 0.2rem;
+}
+
+.forecast-info__elem:hover {
+  cursor: pointer;
+  background-color: gray;
 }

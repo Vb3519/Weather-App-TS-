@@ -44,13 +44,19 @@
           <!-- скорость ветра, влажность видимость: -->
           <ul class="current-weather__params">
             <li class="current-weather__params__elem current-weather">
-              <div class="current-weather__label wind-label">
+              <div
+                class="current-weather__label wind-label"
+                title="Скорость ветра"
+              >
                 <i class="fa-solid fa-wind"></i>
               </div>
               <span class="current-weather__param-value wind-value">3 м/с</span>
             </li>
             <li class="current-weather__params__elem current-weather">
-              <div class="current-weather__label humidity-label">
+              <div
+                class="current-weather__label humidity-label"
+                title="Влажность"
+              >
                 <i class="fa-solid fa-droplet"></i>
               </div>
               <span class="current-weather__param-value humidity-value"
@@ -58,7 +64,10 @@
               >
             </li>
             <li class="current-weather__params__elem current-weather">
-              <div class="current-weather__label visibility-label">
+              <div
+                class="current-weather__label visibility-label"
+                title="Видимость"
+              >
                 <i class="fa-solid fa-eye"></i>
               </div>
               <span class="current-weather__param-value visibility-value"
@@ -67,6 +76,49 @@
             </li>
           </ul>
         </div>
+
+        <!-- прогноз погоды на текущие сутки: -->
+        <ul class="weather-app__current-day current-day-forecast">
+          <li class="current-day-forecast__elem">
+            <span class="current-day-forecast__elem__time">00:00</span>
+            <div class="current-day-forecast__elem__icon">
+              <img src="http://openweathermap.org/img/wn/03n.png" />
+            </div>
+            <span class="current-day-forecast__elem__temp">8°C</span>
+          </li>
+
+          <li class="current-day-forecast__elem">
+            <span class="current-day-forecast__elem__time">00:00</span>
+            <div class="current-day-forecast__elem__icon">
+              <img src="http://openweathermap.org/img/wn/03n.png" />
+            </div>
+            <span class="current-day-forecast__elem__temp">8°C</span>
+          </li>
+
+          <li class="current-day-forecast__elem">
+            <span class="current-day-forecast__elem__time">00:00</span>
+            <div class="current-day-forecast__elem__icon">
+              <img src="http://openweathermap.org/img/wn/03n.png" />
+            </div>
+            <span class="current-day-forecast__elem__temp">8°C</span>
+          </li>
+
+          <li class="current-day-forecast__elem">
+            <span class="current-day-forecast__elem__time">00:00</span>
+            <div class="current-day-forecast__elem__icon">
+              <img src="http://openweathermap.org/img/wn/03n.png" />
+            </div>
+            <span class="current-day-forecast__elem__temp">8°C</span>
+          </li>
+
+          <li class="current-day-forecast__elem">
+            <span class="current-day-forecast__elem__time">00:00</span>
+            <div class="current-day-forecast__elem__icon">
+              <img src="http://openweathermap.org/img/wn/03n.png" />
+            </div>
+            <span class="current-day-forecast__elem__temp">8°C</span>
+          </li>
+        </ul>
 
         <!----------------------------------- прогноз погоды на ближайшие 5 дней (в выбранном городе): ----------------------------------->
         <div class="weather-app__forecast weather-forecast">

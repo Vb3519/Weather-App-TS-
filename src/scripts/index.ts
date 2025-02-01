@@ -13,6 +13,12 @@ import weatherForecastApiResponse from './types/weatherForecastApiResponse';
 
 import { createCurrentDateString } from './utils/currentDateAndTime';
 
+// Рендер эл-ов:
+import renderCurrentWeatherData from './render/renderCurrWeatherData';
+import createWeatherForecastElem from './render/createWeatherForecastElem';
+import createCurrentDayForecastElem from './render/createCurrentDayForecastElem';
+import renderWeatherForecast from './render/renderWeatherForecast'; // общий для суточного прогноза и 5-ти дневного
+
 // HTML-элементы:
 const inputElem: HTMLInputElement | null = document.querySelector(
   '.input-inner__input-elem'
@@ -26,28 +32,36 @@ const getWeatherInfoBtnLabel: Element | null = document.querySelector(
 const currentWeatherDataContainer: Element | null = document.querySelector(
   '.weather-app__current'
 );
-const weatherForecastContainer: Element | null = document.querySelector(
-  '.weather-forecast__info'
-);
+const weatherForecastContainer: HTMLUListElement | null =
+  document.querySelector('.weather-forecast__info');
+
+const currentDayWeatherForecastContainer: HTMLUListElement | null =
+  document.querySelector('.weather-app__current-day');
 
 let currentWeatherData: currentWeatherApiResponse | null | undefined = null; // текущая погода в запрашиваемом городе
 let extractedWeatherData: extracted_CurrentWeatherData | null = null; // объект из текущей даты по погоде (для рендера)
 
 let currentWeatherCoords: currentCoordsApiResponse | null = null; // широта и долгота для API-запроса прогноза на 5 дней
-
 let weatherForecastData: weatherForecastApiResponse | null | undefined = null; // прогноз на 5 дней
+
+let currentDayForecastWeatherData: string[][] | null = null; // дневная дата, интервал 3 часа (время, температура, иконка погоды)
+
 let weatherForecastTempData: number[][] | null = null; // массив массивов температур на 5 дней
 let weatherForecastAverageDayTemp: number[] | null = null; // массив усредненных значений температуры на каждый из 5 дней
-let weatherForecastDescripAndIcons: string[][] | null = null;
+let weatherForecastDescripAndIcons: string[][] | null = null; // массив описания погоды и индексов иконок погоды на каждый из 5 дней
+
 let weatherForecastElemsList: HTMLLIElement[] | null = null;
+let currentDayForecastElemsList: HTMLLIElement[] | null = null;
 
 let currentCityName: string | null = null;
+
+// ТЕКУЩЕЕ ВРЕМЯ И ДАТА:
+const currentDateAndTime: string = createCurrentDateString();
 
 // Присваивание значения переменной currentCityName (название города):
 const setCityName = () => {
   if (inputElem?.value) {
     currentCityName = inputElem.value;
-    console.log(currentCityName);
   }
 };
 // ОБРАБОТЧИК:
@@ -83,12 +97,31 @@ const getWeatherData = async (cityName: string | null) => {
 
     weatherForecastData = await fetchForecastWeatherData(lat, lon, API_KEY);
 
+    // дневная дата, интервал 3 часа (время, температура, иконка погоды):
+    currentDayForecastWeatherData =
+      createCurrentDayForecastData(weatherForecastData);
+
     // массив с массивами температур на ближайшие 5 суток:
     weatherForecastTempData =
       createWeatherForecastTempDataArr(weatherForecastData);
   }
+  console.log(currentDayForecastWeatherData);
   console.log(weatherForecastTempData);
 
+  // РЕНДЕР И ДАННЫЕ ПРОГНОЗА ПОГОДЫ НА ТЕКУЩИЙ ДЕНЬ:
+  //----------------------------------------------------------------------------------------
+  currentDayForecastElemsList = createCurrentDayForecastElemsList(
+    currentDayForecastWeatherData
+  );
+  console.log(currentDayForecastElemsList);
+
+  renderWeatherForecast(
+    currentDayWeatherForecastContainer,
+    currentDayForecastElemsList
+  ); // рендер прогноза (текущий день)
+
+  // РЕНДЕР И ДАННЫЕ ПРОГНОЗА ПОГОДЫ НА 5 ДНЕЙ:
+  //----------------------------------------------------------------------------------------
   weatherForecastDescripAndIcons =
     createWeatherForecastIconsAndDescripArr(weatherForecastData);
   console.log(weatherForecastDescripAndIcons);
@@ -96,10 +129,11 @@ const getWeatherData = async (cityName: string | null) => {
   weatherForecastAverageDayTemp = calcForecastAverageDayTemp();
   console.log(weatherForecastAverageDayTemp);
 
-  weatherForecastElemsList = createWeatherForecastElemsList(); // ----------------------------------------------------------------------------- TYT
+  // создание элемента списка из прогноза погоды на ближайшие 5 дней (всего 5 элементов)
+  weatherForecastElemsList = createWeatherForecastElemsList();
   console.log(weatherForecastElemsList);
 
-  renderWeatherForecast();
+  renderWeatherForecast(weatherForecastContainer, weatherForecastElemsList); // рендер прогноза (5 дней)
 
   if (getWeatherInfoBtn) getWeatherInfoBtn.disabled = false;
   currentCityName = null;
@@ -107,7 +141,13 @@ const getWeatherData = async (cityName: string | null) => {
 
   console.log(weatherForecastData);
 
-  renderCurrentWeatherData(extractedWeatherData);
+  // РЕНДЕР ТЕКУЩЕЙ ПОГОДЫ В ЗАПРАШИВАЕМОМ ГОРОДЕ:
+  //---------------------------------------------
+  renderCurrentWeatherData(
+    currentWeatherDataContainer,
+    extractedWeatherData,
+    currentDateAndTime
+  );
 };
 // ОБРАБОТЧИК:
 getWeatherInfoBtn?.addEventListener('click', () => {
@@ -132,42 +172,6 @@ const extractCurrentWeatherDataProps = (
   };
 
   return extractedData;
-};
-
-// ТЕКУЩЕЕ ВРЕМЯ И ДАТА:
-const currentDateAndTime: string = createCurrentDateString();
-
-// Рендер текущей погоды в запрашиваемом городе:
-const renderCurrentWeatherData = (
-  cityWeatherData: extracted_CurrentWeatherData | null
-): void => {
-  if (currentWeatherDataContainer) {
-    currentWeatherDataContainer.innerHTML = `
-      <h3 class="current-weather__city">${cityWeatherData?.cityName}</h3>
-      <p class="current-weather__date">${currentDateAndTime}</p>
-      <p class="current-weather__temp">${cityWeatherData?.temprature} °C</p>
-      <ul class="current-weather__descrip">
-        <li class="current-weather__descrip__feels-like">Ощущается как ${cityWeatherData?.temp_feels_like} °C</li>
-        <li class="current-weather__descrip__label"><img src="http://openweathermap.org/img/wn/${cityWeatherData?.currentWeatherIconId}.png"></li>
-        <li class="current-weather__descrip__text">${cityWeatherData?.weatherDescripText}</li>
-      </ul>
-          
-      <ul class="current-weather__params">
-        <li class="current-weather__params__elem current-weather">
-          <div class="current-weather__label wind-label"><i class="fa-solid fa-wind"></i></div>
-          <span class="current-weather__param-value wind-value">${cityWeatherData?.wind_speed} км/ч</span>
-        </li>
-        <li class="current-weather__params__elem current-weather">
-          <div class="current-weather__label humidity-label"><i class="fa-solid fa-droplet"></i></div>
-          <span class="current-weather__param-value humidity-value">${cityWeatherData?.humidity}%</span>
-        </li>
-        <li class="current-weather__params__elem current-weather">
-          <div class="current-weather__label visibility-label"><i class="fa-solid fa-eye"></i></div>
-          <span class="current-weather__param-value visibility-value">${cityWeatherData?.visibility} км</span>
-        </li>
-      </ul>    
-    `;
-  }
 };
 
 // Массив с температурными параметрами на ближайшие 5 суток:
@@ -224,26 +228,6 @@ function createWeatherForecastIconsAndDescripArr(
   return forecastDescripAndIconDataMainArr;
 }
 
-// создание элемента списка из прогноза погоды на ближайшие 5 дней (всего 5 элементов)
-const createWeatherForecastElem = (
-  averageTemp: number,
-  descripAndIcon: string[]
-): HTMLLIElement => {
-  const weatherForecastListElem: HTMLLIElement = document.createElement('li');
-  weatherForecastListElem.classList.add('forecast-info__elem');
-
-  weatherForecastListElem.innerHTML = `
-    <span class="forecast-info__elem__day">Пн</span>
-    <div class="forecast-info__elem__icon">
-      <img src="http://openweathermap.org/img/wn/${descripAndIcon[1]}.png" />
-    </div>
-    <span class="forecast-info__elem__temp">${averageTemp}°C</span>
-    <span class="forecast-info__elem__descrip">${descripAndIcon[0]}</span>
-  `;
-
-  return weatherForecastListElem;
-};
-
 // Расчет единого усредненного значения дневной температуры (для каждого из 5 дней):
 const calcForecastAverageDayTemp = (): number[] => {
   const averageTempsArr: number[] = [];
@@ -264,7 +248,7 @@ const calcForecastAverageDayTemp = (): number[] => {
   return averageTempsArr;
 };
 
-// Создание списка из 5-ти элементов <li></li> прогноза погоды (для рендера):
+// Создание списка из 5-ти элементов <li></li> прогноза погоды НА 5 ДНЕЙ (для рендера):
 const createWeatherForecastElemsList = (): HTMLLIElement[] => {
   const weatherForecastElemsList: HTMLLIElement[] = [];
 
@@ -272,7 +256,7 @@ const createWeatherForecastElemsList = (): HTMLLIElement[] => {
     weatherForecastAverageDayTemp !== null &&
     weatherForecastDescripAndIcons !== null
   ) {
-    for (let counter: number = 0; counter <= 5; counter++) {
+    for (let counter: number = 0; counter < 5; counter++) {
       const descripAndIcon: string[] = weatherForecastDescripAndIcons[counter];
 
       if (descripAndIcon && descripAndIcon.length === 2) {
@@ -293,9 +277,44 @@ const createWeatherForecastElemsList = (): HTMLLIElement[] => {
   return weatherForecastElemsList;
 };
 
-// Рендер прогноза погоды на ближайшие 5 дней:
-const renderWeatherForecast = (): void => {
-  weatherForecastElemsList?.forEach((element: HTMLLIElement) => {
-    weatherForecastContainer?.append(element);
-  });
+// Массив с дневной датой, интервал 3 часа (время, температура, иконка погоды):
+const createCurrentDayForecastData = (
+  apiForecastData: weatherForecastApiResponse | null | undefined
+) => {
+  const currentDayWeatherData: string[][] = [];
+  const weatherForecastList: any[] = apiForecastData?.list;
+
+  if (apiForecastData) {
+    weatherForecastList.slice(0, 5).forEach((elem) => {
+      const threeHoursStepData: string[] = [];
+
+      const currentTime: string = elem.dt_txt.slice(-8, -3); // '2025-01-31 21:00:00' => '21:00'
+      const tempVal: string = Math.floor(elem.main.temp).toString();
+      const weatherIconId: string = elem.weather[0].icon;
+
+      threeHoursStepData.push(currentTime, tempVal, weatherIconId);
+      currentDayWeatherData.push([...threeHoursStepData]); // деструктуризация обязательна (чтобы не запушить ссылку на пустой массив)
+
+      threeHoursStepData.length = 0;
+    });
+  }
+
+  return currentDayWeatherData;
 };
+
+// Создание списка из 5-ти элементов <li></li> прогноза погоды НА СЕГОДНЯ (для рендера):
+function createCurrentDayForecastElemsList(
+  dayForecastData: string[][] | null
+): HTMLLIElement[] {
+  const currentDayForecastElemsList: HTMLLIElement[] = [];
+
+  if (dayForecastData) {
+    dayForecastData.forEach((threeHoursData: string[]) => {
+      currentDayForecastElemsList.push(
+        createCurrentDayForecastElem(threeHoursData)
+      );
+    });
+  }
+
+  return currentDayForecastElemsList;
+}
