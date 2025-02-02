@@ -17,12 +17,22 @@ import {
 } from './utils/currentDateAndTime';
 
 // Рендер эл-ов:
+import renderSearchHistory from './render/renderSearchHistory';
 import renderCurrentWeatherData from './render/renderCurrWeatherData';
 import createWeatherForecastElem from './render/createWeatherForecastElem';
 import createCurrentDayForecastElem from './render/createCurrentDayForecastElem';
 import renderWeatherForecast from './render/renderWeatherForecast'; // общий для суточного прогноза и 5-ти дневного
 
 // HTML-элементы:
+const searchHistoryBtn: HTMLButtonElement | null = document.querySelector(
+  '.search-and-input__btn'
+);
+const weatherAppSearchHistoryWrapper: HTMLDivElement | null =
+  document.querySelector('.weather-app__search-history-wrapper');
+searchHistoryBtn?.addEventListener('click', () => {
+  renderSearchHistory(weatherAppSearchHistoryWrapper);
+});
+
 const inputElem: HTMLInputElement | null = document.querySelector(
   '.input-inner__input-elem'
 );

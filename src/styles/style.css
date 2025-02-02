@@ -4,6 +4,7 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
   list-style: none;
+  user-select: none;
 }
 
 .app-page {
@@ -19,6 +20,7 @@
 }
 
 .app-page__weather {
+  position: relative;
   font-size: 1.1rem;
   border-radius: 0.5rem;
   padding: 1rem;
@@ -26,7 +28,6 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  /* background-color: #30304e; */
   background: linear-gradient(135deg, #217e64, #443d74);
 }
 
@@ -42,7 +43,6 @@
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
-  /* background-color: #30304e; */
   background-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   border: none;
@@ -57,9 +57,61 @@
 
 .searh-history-btn:hover {
   cursor: pointer;
-  /* background-color: rgb(82, 82, 104); */
   background-color: rgba(255, 255, 255, 0.15);
   color: #b2cbd8;
+}
+
+/* История просмотров погоды: */
+.weather-app__search-history-wrapper {
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 0;
+  top: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  transition: 0.5s;
+}
+
+.search-history-wrapper__search-history {
+  padding: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  border-radius: 0.3rem;
+}
+
+.weather-search-history__elem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 0.3rem;
+}
+
+.weather-search-history__elem:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.weather-search-history__elem__city-name {
+  white-space: nowrap;
+}
+
+.weather-search-history__elem__weather-info {
+  flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 /* Поле инпут: */
@@ -101,7 +153,6 @@
 }
 
 .search-and-input__input:hover .fa-magnifying-glass {
-  /* color: #636363; */
   color: rgb(22, 22, 22);
 }
 
@@ -127,7 +178,6 @@
 /* Текущий прогноз погоды: */
 .weather-app__current {
   padding: 0.5rem;
-  /* background-color: #404040; */
   background-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 0.3rem;
@@ -164,13 +214,11 @@
   min-width: 38px;
   min-height: 38px;
   padding: 0.6rem;
-  /* background-color: gray; */
   border-radius: 0.2rem;
 }
 
 /* Текущий день прогноз погоды: */
 .weather-app__current-day {
-  /* background-color: #404040; */
   background-color: rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 0.3rem;
@@ -191,7 +239,6 @@
 
 .current-day-forecast__elem:hover {
   cursor: pointer;
-  /* background-color: gray; */
   background: rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   transition: 0.3s, box-shadow 0.3s;
@@ -200,7 +247,6 @@
 /* Прогноз погоды на ближайшие 5 дней: */
 .weather-app__forecast {
   padding: 0.5rem;
-  /* background-color: #404040; */
   background-color: rgba(255, 255, 255, 0.15);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 0.3rem;
@@ -231,8 +277,558 @@
 
 .forecast-info__elem:hover {
   cursor: pointer;
-  /* background-color: gray; */
   background: rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   transition: 0.3s, box-shadow 0.3s;
+}
+
+/* --------------------------------------------------------------------------------- */
+/* ДЕСКТОПЫ С БОЛЬШИМИ ЭКРАНАМИ: */
+/* --------------------------------------------------------------------------------- */
+@media (min-width: 1281px) {
+  .app-page__weather {
+    padding: 2rem 4rem;
+    font-size: 1.5rem;
+    width: 100%;
+    height: 100%;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  /* ХЕАДЕР: */
+  .search-and-input__btn {
+    padding: 1rem;
+  }
+
+  .search-and-input__input {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+  .input-inner__input-elem {
+    font-size: 1.5rem;
+    padding: 0;
+  }
+
+  .fa-magnifying-glass {
+    font-size: 1.6rem;
+  }
+
+  /* ТЕКУЩАЯ ПОГОДА: */
+  .weather-app__current {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .current-weather__city {
+    text-align: center;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .current-weather__temp {
+    margin: auto;
+    font-size: 3rem;
+  }
+
+  .current-weather__descrip {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .current-weather__descrip__feels-like {
+    white-space: nowrap;
+  }
+
+  .current-weather__label {
+    min-width: 45px;
+    min-height: 45px;
+  }
+
+  .current-weather__descrip__text-and-label {
+    display: flex;
+    align-items: center;
+    border: none;
+    gap: 1rem;
+  }
+
+  .current-weather__params {
+    display: flex;
+    justify-content: space-around;
+    grid-column: span 2;
+    width: 100%;
+  }
+
+  .current-weather__params__elem {
+    gap: 1rem;
+  }
+
+  /* ПРОГНОЗ НА ТЕКУЩИЙ ДЕНЬ: */
+  .weather-app__current-day {
+    padding: 1rem;
+  }
+
+  .current-day-forecast__elem {
+    padding: 1rem;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .weather-app__forecast {
+    padding: 1rem;
+  }
+
+  /* ПРОГНОЗ НА 5 ДНЕЙ: */
+  .weather-forecast__info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .forecast-info__elem {
+    gap: 2rem;
+    font-size: 1.7rem;
+  }
+}
+
+/* --------------------------------------------------------------------------------- */
+/* ДЕСКТОПЫ С МАЛЕНЬКИМИ ЭКРАНАМИ: */
+/* --------------------------------------------------------------------------------- */
+@media (max-width: 1280px) {
+  .app-page__weather {
+    padding: 2rem 4rem;
+    font-size: 1.5rem;
+    width: 100%;
+    height: 100%;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  /* ХЕАДЕР: */
+  .search-and-input__btn {
+    padding: 1rem;
+  }
+
+  .search-and-input__input {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+  .input-inner__input-elem {
+    font-size: 1.5rem;
+    padding: 0;
+  }
+
+  .fa-magnifying-glass {
+    font-size: 1.6rem;
+  }
+
+  /* ТЕКУЩАЯ ПОГОДА: */
+  .weather-app__current {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .current-weather__city {
+    text-align: center;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .current-weather__temp {
+    margin: auto;
+    font-size: 3rem;
+  }
+
+  .current-weather__descrip {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .current-weather__descrip__feels-like {
+    white-space: nowrap;
+  }
+
+  .current-weather__label {
+    min-width: 45px;
+    min-height: 45px;
+  }
+
+  .current-weather__descrip__text-and-label {
+    display: flex;
+    align-items: center;
+    border: none;
+    gap: 1rem;
+  }
+
+  .current-weather__params {
+    display: flex;
+    justify-content: space-around;
+    grid-column: span 2;
+    width: 100%;
+  }
+
+  .current-weather__params__elem {
+    gap: 1rem;
+  }
+
+  /* ПРОГНОЗ НА ТЕКУЩИЙ ДЕНЬ: */
+  .weather-app__current-day {
+    padding: 1rem;
+  }
+
+  .current-day-forecast__elem {
+    padding: 1rem;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .weather-app__forecast {
+    padding: 1rem;
+  }
+
+  /* ПРОГНОЗ НА 5 ДНЕЙ: */
+  .weather-forecast__info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .forecast-info__elem {
+    gap: 2rem;
+    font-size: 1.7rem;
+  }
+}
+
+/* --------------------------------------------------------------------------------- */
+/* ПОРТАТИВНЫЕ УСТРОЙСТВА (ПЛАНШЕТЫ): */
+/* --------------------------------------------------------------------------------- */
+
+@media (max-width: 1185px) {
+  /* 1100px */
+  .app-page__weather {
+    padding: 1rem 2rem;
+  }
+
+  .current-day-forecast__elem {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .weather-app__forecast {
+    padding: 1rem;
+  }
+
+  .forecast-info__elem {
+    gap: 2rem;
+    font-size: 1.5rem;
+  }
+}
+
+/* --------------------------------------------------------------------------------- */
+/* МОБИЛЬНЫЕ УСТРОЙСТВА (ЛАНДШАФТНАЯ ОРИЕНТАЦИЯ): */
+/* --------------------------------------------------------------------------------- */
+
+@media (max-width: 885px) {
+  /* 768px */
+  .app-page__weather {
+    padding: 1.5rem 2.5rem;
+    font-size: 1.5rem;
+    width: 100%;
+    height: 100%;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  /* ХЕАДЕР: */
+  .search-and-input__btn {
+    padding: 1rem;
+  }
+
+  .search-and-input__input {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+  .input-inner__input-elem {
+    font-size: 1.5rem;
+    padding: 0;
+  }
+
+  .fa-magnifying-glass {
+    font-size: 1.6rem;
+  }
+
+  /* ТЕКУЩАЯ ПОГОДА: */
+  .weather-app__current {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .current-weather__city {
+    text-align: center;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .current-weather__temp {
+    margin: auto;
+    font-size: 2.7rem;
+  }
+
+  .current-weather__descrip {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .current-weather__descrip__feels-like {
+    white-space: nowrap;
+  }
+
+  .current-weather__label {
+    min-width: 45px;
+    min-height: 45px;
+  }
+
+  .current-weather__descrip__text-and-label {
+    display: flex;
+    align-items: center;
+    border: none;
+    gap: 1rem;
+  }
+
+  .current-weather__params {
+    display: flex;
+    justify-content: space-around;
+    grid-column: span 2;
+    width: 100%;
+  }
+
+  .current-weather__params__elem {
+    gap: 1rem;
+  }
+
+  /* ПРОГНОЗ НА ТЕКУЩИЙ ДЕНЬ: */
+  .weather-app__current-day {
+    padding: 1rem;
+  }
+
+  .current-day-forecast__elem {
+    padding: 1rem;
+    gap: 0;
+  }
+
+  .weather-app__forecast {
+    padding: 1rem;
+  }
+
+  /* ПРОГНОЗ НА 5 ДНЕЙ: */
+  .weather-forecast__title {
+    font-size: 1.6rem;
+  }
+
+  .weather-forecast__info {
+    display: flex;
+    gap: 0;
+  }
+
+  .forecast-info__elem {
+    gap: 2rem;
+  }
+}
+
+/* --------------------------------------------------------------------------------- */
+/* МОБИЛЬНЫЕ УСТРОЙСТВА (ПОРТРЕТНАЯ ОРИЕНТАЦИЯ): ----------------------------------- */
+/* --------------------------------------------------------------------------------- */
+
+@media (max-width: 600px) {
+  .app-page__weather {
+    padding: 1rem;
+    font-size: 1rem;
+    width: 100%;
+    height: 100vh;
+    justify-content: space-between;
+  }
+
+  /* ХЕАДЕР: */
+  .search-and-input__btn {
+    padding: 0.5rem;
+  }
+
+  .search-and-input__input {
+    padding: 0.4rem 0.2rem;
+    min-width: 240px;
+  }
+
+  .input-inner__input-elem {
+    font-size: 1rem;
+    padding: 0;
+  }
+
+  .fa-magnifying-glass {
+    font-size: 1.1rem;
+  }
+
+  /* ТЕКУЩАЯ ПОГОДА: */
+
+  .weather-app__current {
+    display: flex;
+  }
+
+  .current-weather__city {
+    text-align: center;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .current-weather__temp {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .current-weather__descrip {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .current-weather__label {
+    min-width: 35px;
+    min-height: 35px;
+  }
+
+  .current-weather__descrip__text-and-label {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgb(109 194 216 / 20%);
+  }
+
+  .current-weather__params {
+    display: flex;
+    justify-content: space-around;
+    grid-column: span 2;
+    width: 100%;
+  }
+
+  .current-weather__params__elem {
+    flex-direction: column;
+    flex-basis: 30%;
+    gap: 0.5rem;
+  }
+
+  /* История просмотров погоды: */
+  .weather-app__search-history-wrapper {
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 0;
+    top: 0;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    transition: 0.5s;
+  }
+
+  .search-history-wrapper__search-history {
+    padding: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    border-radius: 0.3rem;
+  }
+
+  .weather-search-history__elem {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 0.3rem;
+  }
+
+  .weather-search-history__elem:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+
+  .weather-search-history__elem__city-name {
+    white-space: nowrap;
+  }
+
+  .weather-search-history__elem__weather-info {
+    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  /* ПРОГНОЗ НА ТЕКУЩИЙ ДЕНЬ: */
+  .weather-app__current-day {
+    padding: 0.5rem;
+  }
+
+  .current-day-forecast__elem {
+    padding: 0.5rem 0;
+  }
+
+  .weather-app__forecast {
+    padding: 0.5rem;
+  }
+
+  /* ПРОГНОЗ НА 5 ДНЕЙ: */
+  .weather-forecast__title {
+    font-size: 1.2rem;
+  }
+
+  .weather-forecast__info {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .forecast-info__elem {
+    font-size: 1rem;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .weather-forecast__title {
+    text-align: center;
+  }
+
+  .forecast-info__elem__descrip {
+    margin-left: auto;
+    text-align: right;
+  }
+}
+
+.active-elem {
+  visibility: visible;
+  opacity: 1;
 }

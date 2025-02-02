@@ -15,29 +15,34 @@ const renderCurrentWeatherData = (
           <li class="current-weather__descrip__feels-like">Ощущается как ${
             cityWeatherData?.temp_feels_like
           } °C</li>
-          <li class="current-weather__descrip__label"><img src="http://openweathermap.org/img/wn/${
-            cityWeatherData?.currentWeatherIconId
-          }.png"></li>
-          <li class="current-weather__descrip__text">${
-            cityWeatherData?.weatherDescripText
-          }</li>
+          <li class="current-weather__descrip__text-and-label">
+              <img
+                class="current-weather__descrip__text-and-label__label"
+                src="http://openweathermap.org/img/wn/${
+                  cityWeatherData?.currentWeatherIconId
+                }.png"
+              />
+              <span class="current-weather__descrip__text-and-label__text"
+                >${cityWeatherData?.weatherDescripText}</span
+              >
+            </li>
         </ul>
             
         <ul class="current-weather__params">
           <li class="current-weather__params__elem current-weather">
-            <div class="current-weather__label wind-label"><i class="fa-solid fa-wind"></i></div>
+            <div class="current-weather__label wind-label" title="Скорость ветра"><i class="fa-solid fa-wind"></i></div>
             <span class="current-weather__param-value wind-value">${
               cityWeatherData?.wind_speed
             } км/ч</span>
           </li>
           <li class="current-weather__params__elem current-weather">
-            <div class="current-weather__label humidity-label"><i class="fa-solid fa-droplet"></i></div>
+            <div class="current-weather__label humidity-label" title="Влажность"><i class="fa-solid fa-droplet"></i></div>
             <span class="current-weather__param-value humidity-value">${
               cityWeatherData?.humidity
             }%</span>
           </li>
           <li class="current-weather__params__elem current-weather">
-            <div class="current-weather__label visibility-label"><i class="fa-solid fa-eye"></i></div>
+            <div class="current-weather__label visibility-label" title="Видимость"><i class="fa-solid fa-eye"></i></div>
             <span class="current-weather__param-value visibility-value">${
               cityWeatherData?.visibility
                 ? cityWeatherData.visibility / 1000
