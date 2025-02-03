@@ -287,7 +287,7 @@
 /* --------------------------------------------------------------------------------- */
 @media (min-width: 1281px) {
   .app-page__weather {
-    padding: 2rem 4rem;
+    padding: 2rem 6rem;
     font-size: 1.5rem;
     width: 100%;
     height: 100%;
@@ -651,6 +651,77 @@
   .forecast-info__elem {
     gap: 2rem;
   }
+
+  /* ------------------------------------------------------------------------------------------------------------------------------------------- TYT */
+  /* Рендер деталей погоды (прогноз 5 дней) по каждому дню: */
+  .weather-forecast__info-details-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .forecast-info-details-container__label > i {
+    /* margin-top: 0.5rem; */
+    cursor: pointer;
+  }
+
+  .forecast-info-details-container__info-details {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .forecast-info-details__elem {
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+    white-space: nowrap;
+  }
+
+  .forecast-info-details__elem:hover {
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: 0.3s, box-shadow 0.3s;
+  }
+
+  .weather-forecast__day-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  /**/
+  .forecast-day-details__descrip {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .forecast-day-details__params {
+    width: 100%;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* .forecast-day-details__params__elem {
+    
+  } */
+
+  .day-weather__label {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    background: #86959d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    min-height: 38px;
+    padding: 0.6rem;
+    border-radius: 0.2rem;
+  }
+  /* ------------------------------------------------------------------------------------------------------------------------------------------- TYT */
 }
 
 /* --------------------------------------------------------------------------------- */

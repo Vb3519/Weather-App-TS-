@@ -212,6 +212,82 @@
         <!----------------------------------- прогноз погоды на ближайшие 5 дней (в выбранном городе): ----------------------------------->
         <div class="weather-app__forecast weather-forecast">
           <h3 class="weather-forecast__title">Прогноз погоды на пять дней:</h3>
+
+          <!----------------------------------- прогноз погоды на ближайшие 5 дней (ДЕТАЛИ): ----------------------------------->
+          <!-- <div
+            class="weather-forecast__info-details-container forecast-info-details-container"
+          >
+            <ul
+              class="forecast-info-details-container__info-details forecast-info-details"
+            >
+              <li class="forecast-info-details__elem">Пн, 11 янв</li>
+              <li class="forecast-info-details__elem">Вт, 12 янв</li>
+              <li class="forecast-info-details__elem">Ср, 13 янв</li>
+              <li class="forecast-info-details__elem">Чт, 14 янв</li>
+              <li class="forecast-info-details__elem">Пт, 15 янв</li>
+            </ul>
+
+            <span class="forecast-info-details-container__label"
+              ><i class="view-switcher fas fa-caret-down"></i>
+            </span>
+          </div>
+
+          <div class="weather-forecast__day-details forecast-day-details">
+            <div class="forecast-day-details__descrip">
+              <div class="forecast-day-details__descrip__icon">
+                <img src="http://openweathermap.org/img/wn/03n.png" />
+              </div>
+              <h4 class="forecast-day-details__descrip__title">
+                Облачно с прояснениями
+              </h4>
+            </div>
+
+            <ul class="forecast-day-details__temp-info">
+              <li class="forecast-day-details__temp-info-max">
+                Максимальная темп: 10°C
+              </li>
+
+              <li class="forecast-day-details__temp-info-min">
+                Минимальная темп: 2°C
+              </li>
+            </ul>
+
+            <ul class="forecast-day-details__params">
+              <li class="forecast-day-details__params__elem day-weather">
+                <div
+                  class="day-weather__label wind-label"
+                  title="Скорость ветра"
+                >
+                  <i class="fa-solid fa-wind"></i>
+                </div>
+                <span class="day-weather__param-value wind-value">3 м/с</span>
+              </li>
+
+              <li class="forecast-day-details__params__elem day-weather">
+                <div
+                  class="day-weather__label humidity-label"
+                  title="Влажность"
+                >
+                  <i class="fa-solid fa-droplet"></i>
+                </div>
+                <span class="day-weather__param-value humidity-value">60%</span>
+              </li>
+
+              <li class="forecast-day-details__params__elem day-weather">
+                <div
+                  class="day-weather__label visibility-label"
+                  title="Видимость"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </div>
+                <span class="day-weather__param-value visibility-value"
+                  >10км</span
+                >
+              </li>
+            </ul>
+          </div> -->
+          <!----------------------------------- прогноз погоды на ближайшие 5 дней (ДЕТАЛИ, КОНЕЦ): ----------------------------------->
+
           <ul class="weather-forecast__info forecast-info">
             <li class="forecast-info__elem">
               <span class="forecast-info__elem__day">Пн</span>
@@ -220,6 +296,9 @@
               </div>
               <span class="forecast-info__elem__temp">8°C</span>
               <span class="forecast-info__elem__descrip">Ясно</span>
+              <span class="forecast-info__elem__details-label"
+                ><i class="view-switcher fas fa-caret-down"></i>
+              </span>
             </li>
 
             <li class="forecast-info__elem">
@@ -231,6 +310,9 @@
               <span class="forecast-info__elem__descrip"
                 >Облачно с прояснениями</span
               >
+              <span class="forecast-info__elem__details-label"
+                ><i class="view-switcher fas fa-caret-down"></i>
+              </span>
             </li>
 
             <li class="forecast-info__elem">
@@ -240,6 +322,9 @@
               </div>
               <span class="forecast-info__elem__temp">8°C</span>
               <span class="forecast-info__elem__descrip">Небольшой снег</span>
+              <span class="forecast-info__elem__details-label"
+                ><i class="view-switcher fas fa-caret-down"></i>
+              </span>
             </li>
 
             <li class="forecast-info__elem">
@@ -251,6 +336,9 @@
               <span class="forecast-info__elem__descrip"
                 >Небольшая облачность</span
               >
+              <span class="forecast-info__elem__details-label"
+                ><i class="view-switcher fas fa-caret-down"></i>
+              </span>
             </li>
 
             <li class="forecast-info__elem">
@@ -260,6 +348,9 @@
               </div>
               <span class="forecast-info__elem__temp">8°C</span>
               <span class="forecast-info__elem__descrip">Небольшой снег</span>
+              <span class="forecast-info__elem__details-label"
+                ><i class="view-switcher fas fa-caret-down"></i>
+              </span>
             </li>
           </ul>
         </div>

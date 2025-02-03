@@ -3,7 +3,7 @@ import extracted_CurrentWeatherData from '../types/extractedCurrentWeatherData';
 // Рендер текущей погоды в запрашиваемом городе:
 const renderCurrentWeatherData = (
   containerElem: Element | null,
-  cityWeatherData: extracted_CurrentWeatherData | null,
+  cityWeatherData: extracted_CurrentWeatherData | null | undefined,
   dateAndTime: string
 ): void => {
   if (containerElem) {

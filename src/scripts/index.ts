@@ -45,14 +45,25 @@ const getWeatherInfoBtnLabel: Element | null = document.querySelector(
 const currentWeatherDataContainer: Element | null = document.querySelector(
   '.weather-app__current'
 );
-const weatherForecastContainer: HTMLUListElement | null =
-  document.querySelector('.weather-forecast__info');
+
+const weatherForecastContainer: HTMLDivElement | null = document.querySelector(
+  '.weather-app__forecast'
+);
+
+const weatherForecastInfoList: HTMLUListElement | null = document.querySelector(
+  '.weather-forecast__info'
+);
 
 const currentDayWeatherForecastContainer: HTMLUListElement | null =
   document.querySelector('.weather-app__current-day');
 
+const forecastViewSwitchBtnsList: NodeListOf<HTMLSpanElement> =
+  document.querySelectorAll('.view-switcher');
+// ОБРАБОТЧИК:
+
 let currentWeatherData: currentWeatherApiResponse | null | undefined = null; // текущая погода в запрашиваемом городе
-let extractedWeatherData: extracted_CurrentWeatherData | null = null; // объект из текущей даты по погоде (для рендера)
+let extractedWeatherData: extracted_CurrentWeatherData | null | undefined =
+  null; // объект из текущей даты по погоде (для рендера)
 
 let currentWeatherCoords: currentCoordsApiResponse | null = null; // широта и долгота для API-запроса прогноза на 5 дней
 let weatherForecastData: weatherForecastApiResponse | null | undefined = null; // прогноз на 5 дней
@@ -95,11 +106,25 @@ const getWeatherData = async (cityName: string | null) => {
   currentWeatherData = await fetchCurrentWeatherData(cityName, API_KEY); // top-level await работает с "target": "es2022" и "module": "es2022"
   console.log(currentWeatherData);
 
-  if (currentWeatherData) {
+  // В проверке после fetch() нужно дополнительно указывать свойства объекта (чтоб она была более детальной)
+  if (
+    currentWeatherData &&
+    currentWeatherData.weather &&
+    currentWeatherData.main
+  ) {
     getWeatherInfoBtnLabel?.classList.remove('animation');
 
     extractedWeatherData = extractCurrentWeatherDataProps(currentWeatherData);
+
     currentWeatherCoords = currentWeatherData.coord;
+  } else {
+    alert('По вашему запросу ничего не нашлось :с');
+    getWeatherInfoBtnLabel?.classList.remove('animation');
+
+    if (getWeatherInfoBtn) getWeatherInfoBtn.disabled = false;
+    currentCityName = null;
+    if (inputElem) inputElem.value = '';
+    return;
   }
   console.log(extractedWeatherData);
   console.log(currentWeatherCoords);
@@ -158,7 +183,7 @@ const getWeatherData = async (cityName: string | null) => {
   weatherForecastElemsList = createWeatherForecastElemsList();
   console.log(weatherForecastElemsList);
 
-  renderWeatherForecast(weatherForecastContainer, weatherForecastElemsList); // рендер прогноза (5 дней)
+  renderWeatherForecast(weatherForecastInfoList, weatherForecastElemsList); // рендер прогноза (5 дней)
 
   if (getWeatherInfoBtn) getWeatherInfoBtn.disabled = false;
   currentCityName = null;
@@ -266,7 +291,7 @@ const calcForecastAverageDayTemp = (): number[] => {
 };
 
 // Создание списка из 5-ти элементов <li></li> прогноза погоды НА 5 ДНЕЙ (для рендера):
-const createWeatherForecastElemsList = (): HTMLLIElement[] => {
+export const createWeatherForecastElemsList = (): HTMLLIElement[] => {
   // ---------------------------------------------------------------------------------------------------------------------------------- TYT
   const weatherForecastElemsList: HTMLLIElement[] = [];
 
