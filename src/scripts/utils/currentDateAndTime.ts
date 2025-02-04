@@ -9,6 +9,20 @@ const daysList: { [key: number]: string } = {
 };
 
 const shortDayNamesList = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+const shortMonthNamesList = [
+  'Янв',
+  'Фев',
+  'Март',
+  'Апр',
+  'Май',
+  'Июнь',
+  'Июль',
+  'Авг',
+  'Сент',
+  'Окт',
+  'Нояб',
+  'Дек',
+];
 
 const monthsList: { [key: number]: string } = {
   0: 'января',
@@ -69,3 +83,30 @@ export const getShortDayNamesData = (): string[] => {
 
   return shortDayNamesData.slice(0, 5);
 };
+
+// Получение массива строк с короткой информацией по текущему дню недели и числу:
+// для рендера детализации дней в 5ти дневном прогнозе погоды
+export function getShortDayAndDateString(): string[] {
+  const dayAndDateStringArr: string[] = [];
+
+  const date: Date = new Date();
+  let dayIndex = date.getDay(); // индекс дня недели
+  const monthIndex = date.getMonth(); // индекс месяца
+  let currentDate = date.getDate(); // текущее число месяца
+
+  for (let i = 0; i < shortDayNamesList.length; i++) {
+    if (dayIndex < shortDayNamesList.length - 1) {
+      let string = `${shortDayNamesList[dayIndex]}, ${currentDate} ${shortMonthNamesList[monthIndex]}`;
+      dayAndDateStringArr.push(string);
+      ++dayIndex;
+      ++currentDate;
+    } else {
+      let string = `${shortDayNamesList[dayIndex]}, ${currentDate} ${shortMonthNamesList[monthIndex]}`;
+      dayAndDateStringArr.push(string);
+      dayIndex = 0;
+      ++currentDate;
+    }
+  }
+
+  return dayAndDateStringArr.slice(0, 5);
+}

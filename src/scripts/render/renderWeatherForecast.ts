@@ -1,7 +1,7 @@
 // Рендер прогноза погоды на ближайшие 5 дней (или на ближайшие 12 часов):
 const renderWeatherForecast = (
   forecastContainerElem: HTMLUListElement | null,
-  forecastElems: HTMLLIElement[]
+  forecastElems: HTMLLIElement[] | null
 ): void => {
   if (forecastContainerElem) {
     forecastContainerElem.innerHTML = ``;

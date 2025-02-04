@@ -1,3 +1,4 @@
+import { getShortDayAndDateString } from '../utils/currentDateAndTime';
 // создание элемента списка из прогноза погоды на ближайшие 5 дней (всего 5 элементов):
 
 const createWeatherForecastElem = (
@@ -17,17 +18,6 @@ const createWeatherForecastElem = (
   <span class="forecast-info__elem__descrip">${descripAndIcon[0]}</span>
   <span class="forecast-info__elem__details-label"><i class="view-switcher fas fa-caret-down"></i></span>
   `;
-
-  // После создания элемента, добавление к нему обработчика на отображение детального вида:
-  const weatherForecastContainer: HTMLDivElement | null =
-    document.querySelector('.weather-app__forecast');
-
-  const weatherContainerInnerSwtichBtn: HTMLSpanElement | null =
-    weatherForecastListElem?.querySelector('.view-switcher');
-
-  weatherContainerInnerSwtichBtn?.addEventListener('click', () => {
-    // renderWeatherForecastDayDetails(weatherForecastContainer);
-  });
 
   return weatherForecastListElem;
 };

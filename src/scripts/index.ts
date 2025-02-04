@@ -14,6 +14,7 @@ import weatherForecastApiResponse from './types/weatherForecastApiResponse';
 import {
   createCurrentDateString,
   getShortDayNamesData,
+  getShortDayAndDateString,
 } from './utils/currentDateAndTime';
 
 // Рендер эл-ов:
@@ -57,10 +58,6 @@ const weatherForecastInfoList: HTMLUListElement | null = document.querySelector(
 const currentDayWeatherForecastContainer: HTMLUListElement | null =
   document.querySelector('.weather-app__current-day');
 
-const forecastViewSwitchBtnsList: NodeListOf<HTMLSpanElement> =
-  document.querySelectorAll('.view-switcher');
-// ОБРАБОТЧИК:
-
 let currentWeatherData: currentWeatherApiResponse | null | undefined = null; // текущая погода в запрашиваемом городе
 let extractedWeatherData: extracted_CurrentWeatherData | null | undefined =
   null; // объект из текущей даты по погоде (для рендера)
@@ -79,6 +76,8 @@ let weatherForecastElemsList: HTMLLIElement[] | null = null;
 let currentDayForecastElemsList: HTMLLIElement[] | null = null;
 
 let currentCityName: string | null = null;
+
+let weatherForecastDetailedDayData: avgForecastDayInfo_Data[] | null = null;
 
 // ТЕКУЩЕЕ ВРЕМЯ И ДАТА:
 const currentDateAndTime: string = createCurrentDateString();
@@ -169,6 +168,9 @@ const getWeatherData = async (cityName: string | null) => {
 
   // РЕНДЕР И ДАННЫЕ ПРОГНОЗА ПОГОДЫ НА 5 ДНЕЙ:
   //----------------------------------------------------------------------------------------
+  weatherForecastDetailedDayData =
+    getDetailedForecastDayData(weatherForecastData);
+
   weatherForecastShortDayNames = getShortDayNamesData();
   console.log(weatherForecastShortDayNames);
 
@@ -181,7 +183,7 @@ const getWeatherData = async (cityName: string | null) => {
 
   // создание элемента списка из прогноза погоды на ближайшие 5 дней (всего 5 элементов)
   weatherForecastElemsList = createWeatherForecastElemsList();
-  console.log(weatherForecastElemsList);
+  console.log('forecast elems:', weatherForecastElemsList);
 
   renderWeatherForecast(weatherForecastInfoList, weatherForecastElemsList); // рендер прогноза (5 дней)
 
@@ -291,8 +293,7 @@ const calcForecastAverageDayTemp = (): number[] => {
 };
 
 // Создание списка из 5-ти элементов <li></li> прогноза погоды НА 5 ДНЕЙ (для рендера):
-export const createWeatherForecastElemsList = (): HTMLLIElement[] => {
-  // ---------------------------------------------------------------------------------------------------------------------------------- TYT
+const createWeatherForecastElemsList = (): HTMLLIElement[] => {
   const weatherForecastElemsList: HTMLLIElement[] = [];
 
   if (
@@ -317,6 +318,32 @@ export const createWeatherForecastElemsList = (): HTMLLIElement[] => {
         );
       }
     }
+
+    let weatherForecastDetailedDataElemCounter: number = 0;
+
+    weatherForecastElemsList.forEach((weatherForecastElem: HTMLLIElement) => {
+      weatherForecastElem.dataset.counter =
+        weatherForecastDetailedDataElemCounter.toString();
+      ++weatherForecastDetailedDataElemCounter;
+
+      weatherForecastElem.addEventListener('click', (e: Event) => {
+        const currentTarget = e.currentTarget as HTMLElement;
+
+        let elemCounterDataset: string | undefined =
+          currentTarget.dataset.counter;
+
+        if (elemCounterDataset) {
+          let elemCounterDatasetNumber: number = parseInt(elemCounterDataset);
+          console.log(elemCounterDatasetNumber);
+
+          renderDetailedForecastDayData(
+            weatherForecastContainer,
+            weatherForecastDetailedDayData,
+            elemCounterDatasetNumber
+          );
+        }
+      });
+    });
   }
 
   return weatherForecastElemsList;
@@ -363,3 +390,190 @@ function createCurrentDayForecastElemsList(
 
   return currentDayForecastElemsList;
 }
+interface avgForecastDayInfo_Data {
+  iconId: string | null;
+  descrip: string | null;
+  maxTemp: number | null;
+  minTemp: number | null;
+  wind_speed: number | null;
+  humidity: number | null;
+  visibility: number | null;
+}
+
+function getDetailedForecastDayData(
+  weatherForecast: weatherForecastApiResponse | null | undefined
+) {
+  const detailedForecastDayInfoArr: avgForecastDayInfo_Data[] = [];
+
+  const weatherForecastList: any[] = weatherForecast?.list;
+
+  for (let i = 4; i < weatherForecastList.length; i += 8) {
+    const avgForecastDayInfo: avgForecastDayInfo_Data = {
+      iconId: null,
+      descrip: null,
+      maxTemp: null,
+      minTemp: null,
+      wind_speed: null,
+      humidity: null,
+      visibility: null,
+    };
+
+    avgForecastDayInfo.iconId = weatherForecastList[i].weather[0].icon;
+    avgForecastDayInfo.descrip = weatherForecastList[i].weather[0].description;
+    avgForecastDayInfo.maxTemp = Math.floor(
+      weatherForecastList[i].main.temp_max
+    );
+    avgForecastDayInfo.minTemp = Math.floor(
+      weatherForecastList[i].main.temp_min
+    );
+    avgForecastDayInfo.wind_speed = weatherForecastList[i].wind.speed;
+    avgForecastDayInfo.humidity = weatherForecastList[i].main.humidity;
+    avgForecastDayInfo.visibility = weatherForecastList[i].visibility / 1000;
+
+    detailedForecastDayInfoArr.push(avgForecastDayInfo);
+  }
+
+  console.log('forecastDayDetails:', detailedForecastDayInfoArr);
+  return detailedForecastDayInfoArr;
+}
+
+const renderDetailedForecastDayData = (
+  containerElem: HTMLDivElement | null,
+  forecastDayInfoData: avgForecastDayInfo_Data[] | null,
+  datasetCounter: number
+) => {
+  if (containerElem && forecastDayInfoData) {
+    const shortDayAndDateStringArr: string[] = getShortDayAndDateString();
+
+    containerElem.innerHTML = `
+    <h3 class="weather-forecast__title">Прогноз погоды на пять дней:</h3>
+      <div class="weather-forecast__info-details-container forecast-info-details-container">
+        <ul class="forecast-info-details-container__info-details forecast-info-details">
+          <li class="forecast-info-details__elem" data-detailsElemCounter="0">${shortDayAndDateStringArr[0]}</li>
+          <li class="forecast-info-details__elem" data-detailsElemCounter="1">${shortDayAndDateStringArr[1]}</li>
+          <li class="forecast-info-details__elem" data-detailsElemCounter="2">${shortDayAndDateStringArr[2]}</li>
+          <li class="forecast-info-details__elem" data-detailsElemCounter="3">${shortDayAndDateStringArr[3]}</li>
+          <li class="forecast-info-details__elem" data-detailsElemCounter="4">${shortDayAndDateStringArr[4]}</li>
+        </ul>
+
+        <span class="forecast-info-details-container__label"><i class="view-switcher fas fa-caret-down"></i></span>
+      </div>
+
+      <div class="weather-forecast__day-details forecast-day-details">
+        <div class="forecast-day-details__descrip">
+          <div class="forecast-day-details__descrip__icon">
+            <img src="http://openweathermap.org/img/wn/${forecastDayInfoData[datasetCounter].iconId}.png" />
+          </div>
+          <h4 class="forecast-day-details__descrip__title">
+          ${forecastDayInfoData[datasetCounter].descrip}
+          </h4>
+        </div>
+
+        <ul class="forecast-day-details__temp-info">
+          <li class="forecast-day-details__temp-info-max">
+            Максимальная темп: ${forecastDayInfoData[datasetCounter].maxTemp}°C
+          </li>
+
+          <li class="forecast-day-details__temp-info-min">
+            Минимальная темп: ${forecastDayInfoData[datasetCounter].minTemp}°C
+          </li>
+        </ul>
+
+        <ul class="forecast-day-details__params">
+          <li class="forecast-day-details__params__elem day-weather">
+            <div class="day-weather__label wind-label" title="Скорость ветра">
+              <i class="fa-solid fa-wind"></i>
+            </div>
+            <span class="day-weather__param-value wind-value">${forecastDayInfoData[datasetCounter].wind_speed} м/с</span>
+          </li>
+
+          <li class="forecast-day-details__params__elem day-weather">
+            <div class="day-weather__label humidity-label" title="Влажность">
+              <i class="fa-solid fa-droplet"></i>
+            </div>
+            <span class="day-weather__param-value humidity-value">${forecastDayInfoData[datasetCounter].humidity}%</span>
+          </li>
+
+          <li class="forecast-day-details__params__elem day-weather">
+            <div class="day-weather__label visibility-label" title="Видимость">
+              <i class="fa-solid fa-eye"></i>
+            </div>
+            <span class="day-weather__param-value visibility-value">${forecastDayInfoData[datasetCounter].visibility}км</span>
+          </li>
+        </ul>
+      </div>
+    `;
+
+    // ------------------------------------------------------------------------------------------------------------------------- РАБОТАЮ ТУТ
+    // ------------------------------------------------------------------------------------------------------------------------- РАБОТАЮ ТУТ
+    // ------------------------------------------------------------------------------------------------------------------------- РАБОТАЮ ТУТ
+
+    // Данная функция рендера должна быть добавлена и при первоначальном рендере списка (когда идет .fetch())
+    const renderForecastInfoElemsList = (
+      containerElem: HTMLDivElement | null,
+      forecastElems: HTMLLIElement[] | null
+    ): void => {
+      if (containerElem && forecastElems) {
+        containerElem.innerHTML = `
+        <h3 class="weather-forecast__title">Прогноз погоды на пять дней:</h3>
+        <ul class="weather-forecast__info forecast-info"></ul>
+      `;
+
+        const forecastElemsList: HTMLUListElement | null =
+          containerElem.querySelector('.weather-forecast__info');
+
+        forecastElems.forEach((listElem: HTMLLIElement) => {
+          forecastElemsList?.append(listElem);
+        });
+      }
+    };
+
+    const forecastInfoDetailElemsList: NodeListOf<HTMLLIElement> =
+      containerElem.querySelectorAll('.forecast-info-details__elem');
+
+    // Подсветка выбранного пользователем элемента:
+    forecastInfoDetailElemsList.forEach(
+      (detailElem: HTMLLIElement, index: number) => {
+        detailElem.classList.remove('selected-detailElem');
+
+        if (index === datasetCounter) {
+          detailElem.classList.add('selected-detailElem');
+        }
+
+        detailElem.addEventListener('click', (e) => {
+          selectAnotherDayWeatherDetailedData(e);
+        });
+      }
+    );
+
+    // Выбор другого дня с детализированной информацией:
+    const selectAnotherDayWeatherDetailedData = (e: Event) => {
+      const currentTarget = e.currentTarget as HTMLElement;
+
+      if (currentTarget) {
+        let weatherDetailsElemCounter: string | undefined =
+          currentTarget.dataset.detailselemcounter;
+        if (weatherDetailsElemCounter) {
+          let weatherDetailsCounterNumber: number = parseInt(
+            weatherDetailsElemCounter
+          );
+
+          // Просмотр детальной информации по дневной погоде и из 5ти дневного прогноза:
+          weatherDetailsCounterNumber !== datasetCounter
+            ? renderDetailedForecastDayData(
+                weatherForecastContainer,
+                weatherForecastDetailedDayData,
+                weatherDetailsCounterNumber
+              )
+            : // Отображение перечня 5ти дневного прогноза погоды с краткой информацией:
+              renderForecastInfoElemsList(
+                weatherForecastContainer,
+                weatherForecastElemsList
+              );
+        }
+      }
+
+      console.log(currentTarget.dataset.detailselemcounter);
+    };
+  }
+};
