@@ -1,15 +1,15 @@
 // Рендер прогноза погоды на ближайшие 5 дней (или на ближайшие 12 часов):
-const renderWeatherForecast = (
-  forecastContainerElem: HTMLUListElement | null,
+const renderWeatherForecastList = (
+  forecastElemsList: HTMLUListElement | null,
   forecastElems: HTMLLIElement[] | null
 ): void => {
-  if (forecastContainerElem) {
-    forecastContainerElem.innerHTML = ``;
+  if (forecastElemsList) {
+    forecastElemsList.innerHTML = ``;
   }
 
   forecastElems?.forEach((element: HTMLLIElement) => {
-    forecastContainerElem?.append(element);
+    forecastElemsList?.append(element);
   });
 };
 
-export default renderWeatherForecast;
+export default renderWeatherForecastList;

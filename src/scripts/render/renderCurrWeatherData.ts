@@ -33,7 +33,7 @@ const renderCurrentWeatherData = (
             <div class="current-weather__label wind-label" title="Скорость ветра"><i class="fa-solid fa-wind"></i></div>
             <span class="current-weather__param-value wind-value">${
               cityWeatherData?.wind_speed
-            } км/ч</span>
+            } м/с</span>
           </li>
           <li class="current-weather__params__elem current-weather">
             <div class="current-weather__label humidity-label" title="Влажность"><i class="fa-solid fa-droplet"></i></div>

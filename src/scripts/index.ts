@@ -22,7 +22,7 @@ import renderSearchHistory from './render/renderSearchHistory';
 import renderCurrentWeatherData from './render/renderCurrWeatherData';
 import createWeatherForecastElem from './render/createWeatherForecastElem';
 import createCurrentDayForecastElem from './render/createCurrentDayForecastElem';
-import renderWeatherForecast from './render/renderWeatherForecast'; // общий для суточного прогноза и 5-ти дневного
+import renderWeatherForecastList from './render/renderWeatherForecastList'; // общий для суточного прогноза и 5-ти дневного
 
 // HTML-элементы:
 const searchHistoryBtn: HTMLButtonElement | null = document.querySelector(
@@ -49,10 +49,6 @@ const currentWeatherDataContainer: Element | null = document.querySelector(
 
 const weatherForecastContainer: HTMLDivElement | null = document.querySelector(
   '.weather-app__forecast'
-);
-
-const weatherForecastInfoList: HTMLUListElement | null = document.querySelector(
-  '.weather-forecast__info'
 );
 
 const currentDayWeatherForecastContainer: HTMLUListElement | null =
@@ -103,7 +99,7 @@ const getWeatherData = async (cityName: string | null) => {
 
   // ПОЛУЧЕНИЕ ДАТЫ ТЕКУЩЕЙ ПОГОДЫ (в запрашиваемом городе):
   currentWeatherData = await fetchCurrentWeatherData(cityName, API_KEY); // top-level await работает с "target": "es2022" и "module": "es2022"
-  console.log(currentWeatherData);
+  console.log('Текущая погода:', currentWeatherData);
 
   // В проверке после fetch() нужно дополнительно указывать свойства объекта (чтоб она была более детальной)
   if (
@@ -125,8 +121,8 @@ const getWeatherData = async (cityName: string | null) => {
     if (inputElem) inputElem.value = '';
     return;
   }
-  console.log(extractedWeatherData);
-  console.log(currentWeatherCoords);
+  console.log('Текущая погода (данные для рендера):', extractedWeatherData);
+  console.log('Текущая широта и долгота:', currentWeatherCoords);
 
   // РЕНДЕР ТЕКУЩЕЙ ПОГОДЫ В ЗАПРАШИВАЕМОМ ГОРОДЕ:
   //---------------------------------------------
@@ -151,8 +147,14 @@ const getWeatherData = async (cityName: string | null) => {
     weatherForecastTempData =
       createWeatherForecastTempDataArr(weatherForecastData);
   }
-  console.log(currentDayForecastWeatherData);
-  console.log(weatherForecastTempData);
+  console.log(
+    'Прогноз погоды на текущий день (интервал 3ч):',
+    currentDayForecastWeatherData
+  );
+  console.log(
+    '[[], []...] температуры на 5ти дневн прогноз:',
+    weatherForecastTempData
+  );
 
   // РЕНДЕР И ДАННЫЕ ПРОГНОЗА ПОГОДЫ НА ТЕКУЩИЙ ДЕНЬ:
   //----------------------------------------------------------------------------------------
@@ -161,7 +163,7 @@ const getWeatherData = async (cityName: string | null) => {
   );
   console.log(currentDayForecastElemsList);
 
-  renderWeatherForecast(
+  renderWeatherForecastList(
     currentDayWeatherForecastContainer,
     currentDayForecastElemsList
   ); // рендер прогноза (текущий день)
@@ -179,13 +181,29 @@ const getWeatherData = async (cityName: string | null) => {
   console.log(weatherForecastDescripAndIcons);
 
   weatherForecastAverageDayTemp = calcForecastAverageDayTemp();
-  console.log(weatherForecastAverageDayTemp);
+  console.log(
+    'Усредненные дневные температуры, 5ти днев. прогноз:',
+    weatherForecastAverageDayTemp
+  );
 
   // создание элемента списка из прогноза погоды на ближайшие 5 дней (всего 5 элементов)
   weatherForecastElemsList = createWeatherForecastElemsList();
   console.log('forecast elems:', weatherForecastElemsList);
 
-  renderWeatherForecast(weatherForecastInfoList, weatherForecastElemsList); // рендер прогноза (5 дней)
+  if (weatherForecastContainer) {
+    weatherForecastContainer.innerHTML = `
+      <h3 class="weather-forecast__title">Прогноз погоды на пять дней:</h3>
+      <ul class="weather-forecast__info forecast-info"></ul>
+    `;
+
+    const weatherForecastInfoList: HTMLUListElement | null =
+      weatherForecastContainer?.querySelector('.weather-forecast__info');
+
+    renderWeatherForecastList(
+      weatherForecastInfoList,
+      weatherForecastElemsList
+    ); // рендер прогноза (5 дней)
+  }
 
   if (getWeatherInfoBtn) getWeatherInfoBtn.disabled = false;
   currentCityName = null;
@@ -426,7 +444,9 @@ function getDetailedForecastDayData(
     avgForecastDayInfo.minTemp = Math.floor(
       weatherForecastList[i].main.temp_min
     );
-    avgForecastDayInfo.wind_speed = weatherForecastList[i].wind.speed;
+    avgForecastDayInfo.wind_speed = Math.floor(
+      weatherForecastList[i].wind.speed
+    );
     avgForecastDayInfo.humidity = weatherForecastList[i].main.humidity;
     avgForecastDayInfo.visibility = weatherForecastList[i].visibility / 1000;
 
@@ -445,6 +465,7 @@ const renderDetailedForecastDayData = (
   if (containerElem && forecastDayInfoData) {
     const shortDayAndDateStringArr: string[] = getShortDayAndDateString();
 
+    // Детальный вид погоды на день в 5ти дневном прогнозе:
     containerElem.innerHTML = `
     <h3 class="weather-forecast__title">Прогноз погоды на пять дней:</h3>
       <div class="weather-forecast__info-details-container forecast-info-details-container">
@@ -456,7 +477,7 @@ const renderDetailedForecastDayData = (
           <li class="forecast-info-details__elem" data-detailsElemCounter="4">${shortDayAndDateStringArr[4]}</li>
         </ul>
 
-        <span class="forecast-info-details-container__label"><i class="view-switcher fas fa-caret-down"></i></span>
+        <span class="forecast-info-details-container__label"><i class="view-switcher fas fa-caret-up"></i></span>
       </div>
 
       <div class="weather-forecast__day-details forecast-day-details">
@@ -504,12 +525,17 @@ const renderDetailedForecastDayData = (
       </div>
     `;
 
-    // ------------------------------------------------------------------------------------------------------------------------- РАБОТАЮ ТУТ
-    // ------------------------------------------------------------------------------------------------------------------------- РАБОТАЮ ТУТ
-    // ------------------------------------------------------------------------------------------------------------------------- РАБОТАЮ ТУТ
+    // Обработчик переключения вида с детального на общий:
+    const switchForecastViewBtn = containerElem.querySelector('.view-switcher');
+    switchForecastViewBtn?.addEventListener('click', () => {
+      renderForecastContainerInnerInfo(
+        weatherForecastContainer,
+        weatherForecastElemsList
+      );
+    });
 
-    // Данная функция рендера должна быть добавлена и при первоначальном рендере списка (когда идет .fetch())
-    const renderForecastInfoElemsList = (
+    // renderWeatherForecastList() - ререндерит сам список; renderForecastContainerInnerInfo() - ререндерит все содержимое эл-та div
+    const renderForecastContainerInnerInfo = (
       containerElem: HTMLDivElement | null,
       forecastElems: HTMLLIElement[] | null
     ): void => {
@@ -566,7 +592,7 @@ const renderDetailedForecastDayData = (
                 weatherDetailsCounterNumber
               )
             : // Отображение перечня 5ти дневного прогноза погоды с краткой информацией:
-              renderForecastInfoElemsList(
+              renderForecastContainerInnerInfo(
                 weatherForecastContainer,
                 weatherForecastElemsList
               );
