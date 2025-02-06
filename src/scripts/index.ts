@@ -554,6 +554,9 @@ const renderDetailedForecastDayData = (
       }
     };
 
+    const forecastDetailsWrapper: HTMLDivElement | null =
+      containerElem.querySelector('.weather-forecast__info-details-container');
+
     const forecastInfoDetailElemsList: NodeListOf<HTMLLIElement> =
       containerElem.querySelectorAll('.forecast-info-details__elem');
 
@@ -568,6 +571,8 @@ const renderDetailedForecastDayData = (
 
         detailElem.addEventListener('click', (e) => {
           selectAnotherDayWeatherDetailedData(e);
+
+          // добавить скролл по клику
         });
       }
     );

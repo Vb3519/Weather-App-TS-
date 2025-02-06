@@ -11,7 +11,6 @@
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
   width: 100%;
   height: 100vh;
-  overflow-y: scroll;
   background-color: #404040;
   color: whitesmoke;
   display: flex;
@@ -282,6 +281,97 @@
   transition: 0.3s, box-shadow 0.3s;
 }
 
+/* Рендер деталей погоды (прогноз 5 дней) по каждому дню: */
+.weather-forecast__title {
+  text-align: center;
+}
+
+.weather-forecast__info-details-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.forecast-info-details-container__label > i {
+  cursor: pointer;
+}
+
+.forecast-info-details-container__info-details {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.forecast-info-details__elem {
+  padding: 1rem;
+  border-radius: 0.3rem;
+  white-space: nowrap;
+}
+
+.forecast-info-details__elem:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: 0.3s, box-shadow 0.3s;
+}
+
+.forecast-day-details__params__elem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.weather-forecast__day-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.forecast-day-details__temp-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.forecast-day-details__descrip {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.forecast-day-details__params {
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-weather__label {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background: #86959d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  padding: 0.6rem;
+  border-radius: 0.2rem;
+}
+
+.forecast-info-details-container__label {
+  padding-right: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
 /* --------------------------------------------------------------------------------- */
 /* ДЕСКТОПЫ С БОЛЬШИМИ ЭКРАНАМИ: */
 /* --------------------------------------------------------------------------------- */
@@ -393,6 +483,16 @@
   .forecast-info__elem {
     gap: 2rem;
     font-size: 1.7rem;
+  }
+
+  /* Рендер деталей погоды (прогноз 5 дней) по каждому дню: */
+  .forecast-info-details-container__info-details,
+  .weather-forecast__info-details-container {
+    gap: 2rem;
+  }
+
+  .forecast-info-details__elem {
+    padding: 1rem;
   }
 }
 
@@ -508,6 +608,16 @@
     gap: 2rem;
     font-size: 1.7rem;
   }
+
+  /* Рендер деталей погоды (прогноз 5 дней) по каждому дню: */
+  .forecast-info-details-container__info-details,
+  .weather-forecast__info-details-container {
+    gap: 2rem;
+  }
+
+  .forecast-info-details__elem {
+    padding: 1rem;
+  }
 }
 
 /* --------------------------------------------------------------------------------- */
@@ -533,6 +643,16 @@
   .forecast-info__elem {
     gap: 2rem;
     font-size: 1.5rem;
+  }
+
+  /* Рендер деталей погоды (прогноз 5 дней) по каждому дню: */
+  .forecast-info-details-container__info-details,
+  .weather-forecast__info-details-container {
+    gap: 1rem;
+  }
+
+  .forecast-info-details__elem {
+    padding: 0.7rem;
   }
 }
 
@@ -652,77 +772,24 @@
     gap: 2rem;
   }
 
-  /* ------------------------------------------------------------------------------------------------------------------------------------------- TYT */
   /* Рендер деталей погоды (прогноз 5 дней) по каждому дню: */
   .weather-forecast__info-details-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    width: 100%;
+    overflow-x: scroll;
   }
 
-  .forecast-info-details-container__label > i {
-    /* margin-top: 0.5rem; */
-    cursor: pointer;
-  }
-
-  .forecast-info-details-container__info-details {
-    display: flex;
+  .weather-forecast__info-details-container {
     justify-content: space-between;
+  }
+
+  .forecast-info-details-container__info-details,
+  .weather-forecast__info-details-container {
     gap: 0.5rem;
   }
 
   .forecast-info-details__elem {
     padding: 0.5rem;
-    border-radius: 0.3rem;
-    white-space: nowrap;
   }
-
-  .forecast-info-details__elem:hover {
-    cursor: pointer;
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    transition: 0.3s, box-shadow 0.3s;
-  }
-
-  .weather-forecast__day-details {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-
-  /**/
-  .forecast-day-details__descrip {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-  }
-
-  .forecast-day-details__params {
-    width: 100%;
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* .forecast-day-details__params__elem {
-    
-  } */
-
-  .day-weather__label {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    background: #86959d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 38px;
-    min-height: 38px;
-    padding: 0.6rem;
-    border-radius: 0.2rem;
-  }
-  /* ------------------------------------------------------------------------------------------------------------------------------------------- TYT */
 }
 
 /* --------------------------------------------------------------------------------- */
@@ -761,6 +828,7 @@
 
   .weather-app__current {
     display: flex;
+    padding: 0.5rem;
   }
 
   .current-weather__city {
@@ -898,6 +966,13 @@
     margin-left: auto;
     text-align: right;
   }
+
+  /* Рендер деталей погоды (прогноз 5 дней) по каждому дню: */
+
+  .day-weather__label {
+    width: 38px;
+    height: 38px;
+  }
 }
 
 .active-elem {
@@ -908,4 +983,19 @@
 .selected-detailElem {
   background-color: rgba(255, 255, 255, 0.3);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+::-webkit-scrollbar {
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(68 61 116 / 20%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(68 61 116 / 30%);
+  border-radius: 10px;
+  cursor: pointer;
 }
