@@ -23,6 +23,7 @@ import renderCurrentWeatherData from './render/renderCurrWeatherData';
 import createWeatherForecastElem from './render/createWeatherForecastElem';
 import createCurrentDayForecastElem from './render/createCurrentDayForecastElem';
 import renderWeatherForecastList from './render/renderWeatherForecastList'; // общий для суточного прогноза и 5-ти дневного
+import renderCityDataInSearchHistory from './render/renderCityDataInSearchHistory';
 
 // HTML-элементы:
 const searchHistoryBtn: HTMLButtonElement | null = document.querySelector(
@@ -54,6 +55,9 @@ const weatherForecastContainer: HTMLDivElement | null = document.querySelector(
 const currentDayWeatherForecastContainer: HTMLUListElement | null =
   document.querySelector('.weather-app__current-day');
 
+const weatherSearchRequestsHistoryListWrapper: HTMLDivElement | null =
+  document.querySelector('.weather-app__search-history-wrapper');
+
 let currentWeatherData: currentWeatherApiResponse | null | undefined = null; // текущая погода в запрашиваемом городе
 let extractedWeatherData: extracted_CurrentWeatherData | null | undefined =
   null; // объект из текущей даты по погоде (для рендера)
@@ -74,6 +78,17 @@ let currentDayForecastElemsList: HTMLLIElement[] | null = null;
 let currentCityName: string | null = null;
 
 let weatherForecastDetailedDayData: avgForecastDayInfo_Data[] | null = null;
+
+// История запросов погоды (информация по городам):
+export interface weatherSearchHistory_State {
+  weatherSearchHistory: extracted_CurrentWeatherData[];
+  searhRequestCounter: number;
+}
+
+const weatherSearchHistoryState: weatherSearchHistory_State = {
+  weatherSearchHistory: [],
+  searhRequestCounter: 0,
+};
 
 // ТЕКУЩЕЕ ВРЕМЯ И ДАТА:
 const currentDateAndTime: string = createCurrentDateString();
@@ -110,6 +125,12 @@ const getWeatherData = async (cityName: string | null) => {
     getWeatherInfoBtnLabel?.classList.remove('animation');
 
     extractedWeatherData = extractCurrentWeatherDataProps(currentWeatherData);
+    renderCityDataInSearchHistory(
+      weatherSearchRequestsHistoryListWrapper,
+      extractedWeatherData,
+      weatherSearchHistoryState
+    );
+    addSearhRequestToHistory(extractedWeatherData); // добавление объекта с информацией о погоде в историю запросов пользователя
 
     currentWeatherCoords = currentWeatherData.coord;
   } else {
@@ -608,3 +629,35 @@ const renderDetailedForecastDayData = (
     };
   }
 };
+
+// ИСТОРИЯ ЗАПРОСОВ ПОЛЬЗОВАТЕЛЯ:
+function addSearhRequestToHistory(
+  requestedWeatherData: extracted_CurrentWeatherData
+) {
+  // Алгоритм FIFO, но с контролируемой длинной массива:
+  if (requestedWeatherData) {
+    const weatherSearchHistoryArr =
+      weatherSearchHistoryState.weatherSearchHistory;
+
+    if (weatherSearchHistoryArr.length < 4) {
+      weatherSearchHistoryArr.push(requestedWeatherData);
+
+      ++weatherSearchHistoryState.searhRequestCounter;
+
+      console.log('История запросов заполняется:', weatherSearchHistoryArr);
+    } else {
+      weatherSearchHistoryState.searhRequestCounter =
+        weatherSearchHistoryState.searhRequestCounter % 4;
+
+      weatherSearchHistoryArr.splice(
+        weatherSearchHistoryState.searhRequestCounter,
+        1
+      );
+
+      weatherSearchHistoryArr.unshift(requestedWeatherData);
+      weatherSearchHistoryState.searhRequestCounter =
+        (weatherSearchHistoryState.searhRequestCounter + 1) % 4;
+      console.log('История запросов заполнена:', weatherSearchHistoryArr);
+    }
+  }
+}
