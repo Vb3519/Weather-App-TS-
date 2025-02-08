@@ -44,9 +44,8 @@ const getWeatherInfoBtn: HTMLButtonElement | null = document.querySelector(
 const getWeatherInfoBtnLabel: Element | null = document.querySelector(
   '.fa-magnifying-glass'
 );
-const currentWeatherDataContainer: Element | null = document.querySelector(
-  '.weather-app__current'
-);
+export const currentWeatherDataContainer: Element | null =
+  document.querySelector('.weather-app__current');
 
 const weatherForecastContainer: HTMLDivElement | null = document.querySelector(
   '.weather-app__forecast'
@@ -57,6 +56,13 @@ const currentDayWeatherForecastContainer: HTMLUListElement | null =
 
 const weatherSearchRequestsHistoryListWrapper: HTMLDivElement | null =
   document.querySelector('.weather-app__search-history-wrapper');
+
+const loadingLabelContainer: HTMLDivElement | null =
+  document.querySelector('.loading-container');
+
+const loadingTitle: HTMLSpanElement | null = document.querySelector(
+  '.loading-container__title'
+);
 
 let currentWeatherData: currentWeatherApiResponse | null | undefined = null; // текущая погода в запрашиваемом городе
 let extractedWeatherData: extracted_CurrentWeatherData | null | undefined =
@@ -575,9 +581,6 @@ const renderDetailedForecastDayData = (
       }
     };
 
-    const forecastDetailsWrapper: HTMLDivElement | null =
-      containerElem.querySelector('.weather-forecast__info-details-container');
-
     const forecastInfoDetailElemsList: NodeListOf<HTMLLIElement> =
       containerElem.querySelectorAll('.forecast-info-details__elem');
 
@@ -593,7 +596,7 @@ const renderDetailedForecastDayData = (
         detailElem.addEventListener('click', (e) => {
           selectAnotherDayWeatherDetailedData(e);
 
-          // добавить скролл по клику
+          // -------------------------------------------------------------------------------------------------------- ДОБАВИТЬ СКРОЛЛ ПО КЛИКУ
         });
       }
     );

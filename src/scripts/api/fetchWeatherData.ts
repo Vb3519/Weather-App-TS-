@@ -1,6 +1,9 @@
 import currentWeatherApiResponse from '../types/currentWeatherApiResponse';
 import weatherForecastApiResponse from '../types/weatherForecastApiResponse';
 
+import renderLoadingLabel from '../render/renderLoadingLabel';
+import { currentWeatherDataContainer } from '../index';
+
 export const API_KEY = '0d7b538e37d8be8642a8f62cd18c61e3';
 
 // ------------------------------------------------------------------------------------------------------------
@@ -12,6 +15,8 @@ export const fetchCurrentWeatherData = async (
   let currentWeatherData: currentWeatherApiResponse | null | undefined = null;
 
   try {
+    renderLoadingLabel(currentWeatherDataContainer);
+
     // небольшой таймер для замедления функции и отображения анимации:
     await new Promise<void>((resolve, reject) => {
       setTimeout(() => {
