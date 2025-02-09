@@ -9,7 +9,7 @@ module.exports = {
     filename: 'bundle.[contenthash].js', // Генерация имени с хэшем
     path: path.resolve(__dirname, 'dist'),
     clean: true, // Очистка папки dist перед новой сборкой
-    publicPath: '/', // Базовый путь для загрузки ассетов
+    publicPath: '/Weather-App-TS-', // Базовый путь для загрузки ассетов
   },
   resolve: {
     extensions: ['.ts', '.js'], // Поддержка TypeScript и JavaScript файлов
