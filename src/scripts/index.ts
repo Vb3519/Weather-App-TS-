@@ -156,7 +156,7 @@ const getWeatherData = async (cityName: string | null) => {
         currentDateAndTime
       );
     } else {
-      // renderRequestError(currentWeatherDataContainer); // иначе, просто рендер ошибки 404
+      renderRequestError(currentWeatherDataContainer); // иначе, просто рендер ошибки 404
     }
 
     return;
