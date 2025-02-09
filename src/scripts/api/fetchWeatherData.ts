@@ -2,6 +2,7 @@ import currentWeatherApiResponse from '../types/currentWeatherApiResponse';
 import weatherForecastApiResponse from '../types/weatherForecastApiResponse';
 
 import renderLoadingLabel from '../render/renderLoadingLabel';
+import renderRequestError from '../render/renderRequestError';
 import { currentWeatherDataContainer } from '../index';
 
 export const API_KEY = '0d7b538e37d8be8642a8f62cd18c61e3';
@@ -32,6 +33,7 @@ export const fetchCurrentWeatherData = async (
 
     return currentWeatherData;
   } catch (error) {
+    renderRequestError(currentWeatherDataContainer); // рендер ошибки при неправильном вводе названия города
     console.log('Ошибка получения данных о текущей погоде', error);
   }
 };

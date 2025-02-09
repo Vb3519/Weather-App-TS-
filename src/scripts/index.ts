@@ -24,6 +24,7 @@ import createWeatherForecastElem from './render/createWeatherForecastElem';
 import createCurrentDayForecastElem from './render/createCurrentDayForecastElem';
 import renderWeatherForecastList from './render/renderWeatherForecastList'; // общий для суточного прогноза и 5-ти дневного
 import renderCityDataInSearchHistory from './render/renderCityDataInSearchHistory';
+import renderRequestError from './render/renderRequestError'; // рендер ошибки при неправильном вводе названия города
 
 // HTML-элементы:
 const searchHistoryBtn: HTMLButtonElement | null = document.querySelector(
@@ -146,6 +147,18 @@ const getWeatherData = async (cityName: string | null) => {
     if (getWeatherInfoBtn) getWeatherInfoBtn.disabled = false;
     currentCityName = null;
     if (inputElem) inputElem.value = '';
+
+    if (extractedWeatherData) {
+      // если перед неправильным запросом уже был сделан правильный, идет рендер данных предыдущего запроса
+      renderCurrentWeatherData(
+        currentWeatherDataContainer,
+        extractedWeatherData,
+        currentDateAndTime
+      );
+    } else {
+      // renderRequestError(currentWeatherDataContainer); // иначе, просто рендер ошибки 404
+    }
+
     return;
   }
   console.log('Текущая погода (данные для рендера):', extractedWeatherData);
@@ -595,7 +608,6 @@ const renderDetailedForecastDayData = (
 
         detailElem.addEventListener('click', (e) => {
           selectAnotherDayWeatherDetailedData(e);
-
           // -------------------------------------------------------------------------------------------------------- ДОБАВИТЬ СКРОЛЛ ПО КЛИКУ
         });
       }
