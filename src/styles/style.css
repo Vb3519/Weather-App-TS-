@@ -19,6 +19,7 @@
 }
 
 .app-page__weather {
+  overflow-y: scroll;
   position: relative;
   font-size: 1.1rem;
   border-radius: 0.5rem;
